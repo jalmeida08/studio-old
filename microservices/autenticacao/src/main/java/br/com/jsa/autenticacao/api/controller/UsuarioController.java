@@ -1,4 +1,4 @@
-package br.com.jsa.autenticacao.infra.controller;
+package br.com.jsa.autenticacao.api.controller;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.jsa.autenticacao.infra.dto.UsuarioDTO;
+import br.com.jsa.autenticacao.api.dto.UsuarioDTO;
+import br.com.jsa.autenticacao.api.service.UsuarioService;
 import br.com.jsa.autenticacao.infra.model.Usuario;
-import br.com.jsa.autenticacao.infra.service.UsuarioService;
 
 @RestController
 @RequestMapping("/usuario")

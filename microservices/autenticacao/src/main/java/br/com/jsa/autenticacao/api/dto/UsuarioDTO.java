@@ -1,4 +1,4 @@
-package br.com.jsa.autenticacao.infra.dto;
+package br.com.jsa.autenticacao.api.dto;
 
 import br.com.jsa.autenticacao.infra.model.Usuario;
 

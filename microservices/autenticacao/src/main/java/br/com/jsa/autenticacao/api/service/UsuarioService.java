@@ -1,4 +1,4 @@
-package br.com.jsa.autenticacao.infra.service;
+package br.com.jsa.autenticacao.api.service;
 
 import java.util.List;
 

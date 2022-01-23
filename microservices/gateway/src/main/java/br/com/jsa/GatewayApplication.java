@@ -18,10 +18,15 @@ public class GatewayApplication {
 	@Bean
 	public RouteLocator rotas(RouteLocatorBuilder builder) {
 		return builder.routes()
-				.route(r -> r
-					.path("/**")
-					.filters( f-> f.rewritePath("/autenticacao", ""))
-					.uri("http://localhost:8081"))
+				.route("autenticacao_route", r -> r
+						.path("/autenticacao/**")
+						.filters( f-> f.rewritePath("/autenticacao", ""))
+						.uri("http://localhost:8081"))
+				.route("cadastro_basico_route", r -> r
+					.path("/cadastro-basico/**")
+					.filters( f-> f.rewritePath("/cadastro-basico", ""))
+					.uri("http://localhost:8082"))
+
 				.build();
 	}
 
