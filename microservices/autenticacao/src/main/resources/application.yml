@@ -10,10 +10,10 @@ eureka:
 
 spring:
   application:
-    name: 'autenticacao'
+    name: 'usuario'
   data:
     mongodb:
       host: localhost
       port: 27017
-      database: autenticacao
+      database: usuario
       

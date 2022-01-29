@@ -1,15 +1,13 @@
 package br.com.jsa.api.dto;
 
-import br.com.jsa.infra.model.Funcionario;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDate;
 
-@Getter
-@Setter
+import br.com.jsa.infra.model.Funcionario;
+
 public class FuncionarioForm {
 
 	private String nome;
-	private String dataNascimento;
+	private LocalDate dataNascimento;
 
 	public FuncionarioForm() {}
 	
@@ -19,5 +17,22 @@ public class FuncionarioForm {
 		f.setDataNascimento(this.dataNascimento);
 		return f;
 	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+	
 	
 }

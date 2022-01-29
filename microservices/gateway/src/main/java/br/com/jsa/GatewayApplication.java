@@ -1,5 +1,7 @@
 package br.com.jsa;
 
+import javax.ws.rs.core.MediaType;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -19,12 +21,14 @@ public class GatewayApplication {
 	public RouteLocator rotas(RouteLocatorBuilder builder) {
 		return builder.routes()
 				.route("autenticacao_route", r -> r
-						.path("/autenticacao/**")
-						.filters( f-> f.rewritePath("/autenticacao", ""))
+						.path("/usuario/**")
+						.filters( f-> f.rewritePath("/usuario", ""))
 						.uri("http://localhost:8081"))
 				.route("cadastro_basico_route", r -> r
 					.path("/cadastro-basico/**")
-					.filters( f-> f.rewritePath("/cadastro-basico", ""))
+					.filters( f-> f.rewritePath("/cadastro-basico", "")
+							.setRequestHeader("Accept", MediaType.APPLICATION_JSON)
+							.setRequestHeader("Content-type", MediaType.APPLICATION_JSON))
 					.uri("http://localhost:8082"))
 
 				.build();

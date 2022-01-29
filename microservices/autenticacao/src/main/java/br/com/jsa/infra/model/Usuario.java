@@ -1,4 +1,4 @@
-package br.com.jsa.autenticacao.infra.model;
+package br.com.jsa.infra.model;
 
 import java.io.Serializable;
 
@@ -14,6 +14,8 @@ public class Usuario implements Serializable {
 
 	@Id
 	private String id;
+	private String funcionarioId;
+	private String clienteId;
 	private String email;
 	private String senha;
 	@Version
@@ -21,6 +23,22 @@ public class Usuario implements Serializable {
 
 	public String getEmail() {
 		return email;
+	}
+
+	public String getFuncionarioId() {
+		return funcionarioId;
+	}
+
+	public void setFuncionarioId(String funcionarioId) {
+		this.funcionarioId = funcionarioId;
+	}
+
+	public String getClienteId() {
+		return clienteId;
+	}
+
+	public void setClienteId(String clienteId) {
+		this.clienteId = clienteId;
 	}
 
 	public void setEmail(String email) {

@@ -10,20 +10,33 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import feign.RequestInterceptor;
+import feign.RequestTemplate;
+
 @SpringBootApplication
 @EnableFeignClients
-public class CadastroBasicoApplication {
+public class UsuarioApplication {
 
 	@Bean
 	@LoadBalanced
 	public RestTemplate getRestTemplate() {
-		ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+		ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(
+				HttpClients.createDefault());
 		return new RestTemplate(requestFactory);
 	}
-	
-	
+
+	@Bean
+	public RequestInterceptor getInterceptorDeAutenticacao() {
+		return new RequestInterceptor() {
+			@Override
+			public void apply(RequestTemplate template) {
+				template.headers().entrySet().stream().forEach(i -> System.out.println(i));
+			}
+		};
+	}
+
 	public static void main(String[] args) {
-		SpringApplication.run(CadastroBasicoApplication.class, args);
+		SpringApplication.run(UsuarioApplication.class, args);
 	}
 
 }

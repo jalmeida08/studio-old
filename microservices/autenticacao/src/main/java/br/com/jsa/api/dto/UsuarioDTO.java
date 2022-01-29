@@ -1,6 +1,6 @@
-package br.com.jsa.autenticacao.api.dto;
+package br.com.jsa.api.dto;
 
-import br.com.jsa.autenticacao.infra.model.Usuario;
+import br.com.jsa.infra.model.Usuario;
 
 public class UsuarioDTO {
 	
