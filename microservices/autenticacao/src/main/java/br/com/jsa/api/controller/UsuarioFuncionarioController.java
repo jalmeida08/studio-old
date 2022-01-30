@@ -33,7 +33,7 @@ public class UsuarioFuncionarioController {
 	@Transactional
 	public ResponseEntity<?> novoUsuarioFuncionario(@RequestBody UsuarioFuncionarioForm usuarioDTO) {
 		this.usuarioService.salva(usuarioDTO);
-		return ResponseEntity.ok("Sucesso");
+		return ResponseEntity.ok().build();
 	}
 	
 	@GetMapping
