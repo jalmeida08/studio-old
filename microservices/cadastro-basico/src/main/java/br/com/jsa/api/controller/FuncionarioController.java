@@ -1,5 +1,7 @@
 package br.com.jsa.api.controller;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -7,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +33,12 @@ public class FuncionarioController {
 	public ResponseEntity<?> cadastraDadosFuncionario(@RequestBody FuncionarioForm form) {
 		FuncionarioDTO f = this.funcionarioService.cadastraDadosFuncionario(form);
 		return ResponseEntity.ok(f);
+	}
+	
+	@GetMapping
+	public ResponseEntity<?> listarFuncionarios() {
+		List<FuncionarioDTO> listaFuncionario = this.funcionarioService.listaFuncionario();
+		return ResponseEntity.ok(listaFuncionario);
 	}
 	
 }

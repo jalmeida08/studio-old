@@ -1,5 +1,8 @@
 package br.com.jsa.api.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,14 @@ public class FuncionarioService {
 	public FuncionarioDTO cadastraDadosFuncionario(FuncionarioForm form) {
 		Funcionario f = this.funcionarioRepository.save(form.toFuncionario());
 		return new FuncionarioDTO(f);
+	}
+	
+	public List<FuncionarioDTO> listaFuncionario(){
+		return this.funcionarioRepository
+				.findAll()
+				.stream()
+				.map(FuncionarioDTO::new)
+				.collect(Collectors.toList());
 	}
 	
 	

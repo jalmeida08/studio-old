@@ -1,9 +1,5 @@
 server:
-  port: 5555
-  
-spring:
-  application:
-    name: 'gateway'
+  port: 9000
 
 eureka:
   client:
