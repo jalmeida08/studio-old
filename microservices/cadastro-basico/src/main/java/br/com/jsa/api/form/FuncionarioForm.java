@@ -1,4 +1,4 @@
-package br.com.jsa.api.dto;
+package br.com.jsa.api.form;
 
 import java.time.LocalDate;
 

@@ -4,14 +4,14 @@ import java.time.LocalDate;
 
 import br.com.jsa.infra.model.Usuario;
 
-public class UsuarioFuncionarioForm {
+public class UsuarioForm {
 	
 	private String nome;
 	private LocalDate dataNascimento;
 	private String email;
 	private String senha;
 	
-	public UsuarioFuncionarioForm() {}
+	public UsuarioForm() {}
 	
 	public FuncionarioForm toFuncionarioForm(){
 		return new FuncionarioForm(this.nome, this.dataNascimento); 

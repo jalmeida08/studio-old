@@ -6,12 +6,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 
 @Configuration
-@EnableAuthorizationServer
 public class OAuth2AuthorizationServer extends AuthorizationServerConfigurerAdapter {
 	
     @Autowired
@@ -43,7 +41,7 @@ public class OAuth2AuthorizationServer extends AuthorizationServerConfigurerAdap
             .scopes("read_profile_info", "web")
             .resourceIds("oauth2-resource")
             .redirectUris("http://localhost:9000/login")
-            .accessTokenValiditySeconds(120)
-            .refreshTokenValiditySeconds(240000);
+            .accessTokenValiditySeconds(120000)
+            .refreshTokenValiditySeconds(480000);
     }
 }

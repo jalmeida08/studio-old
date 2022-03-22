@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.jsa.api.dto.FuncionarioDTO;
-import br.com.jsa.api.dto.FuncionarioForm;
+import br.com.jsa.api.dto.VerificaIdFuncionarioDTO;
+import br.com.jsa.api.form.FuncionarioForm;
 import br.com.jsa.api.service.FuncionarioService;
 
 @RestController
@@ -41,4 +42,17 @@ public class FuncionarioController {
 		return ResponseEntity.ok(listaFuncionario);
 	}
 	
+	@PostMapping("/valida-funcionarios")
+	public ResponseEntity<?> validaFuncionarios(@RequestBody List<String> listaIdFuncionario) {
+		List<VerificaIdFuncionarioDTO> verificaFunciDTO =
+				this.funcionarioService.verificaFuncionario(listaIdFuncionario);
+		return ResponseEntity.ok(verificaFunciDTO);
+	}
+	
+	@PostMapping("/consulta-lista")
+	public ResponseEntity<?> consultaDadosListaFuncionario(@RequestBody List<String> listaFuncionarios){
+		List<FuncionarioDTO> listaFuncionario =
+				funcionarioService.consultaListaFuncionario(listaFuncionarios);
+		return ResponseEntity.ok(listaFuncionario);
+	}
 }

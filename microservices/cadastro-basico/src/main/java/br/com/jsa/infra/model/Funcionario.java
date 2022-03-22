@@ -12,7 +12,5 @@ public class Funcionario extends Pessoa{
 	public String getId() {
 		return id;
 	}
-
-	
 	
 }

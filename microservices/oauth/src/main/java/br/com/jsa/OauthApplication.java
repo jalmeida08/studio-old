@@ -2,10 +2,12 @@ package br.com.jsa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 @SpringBootApplication
-public class OauthApplication  extends WebSecurityConfigurerAdapter {
+@EnableAuthorizationServer
+public class OauthApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(OauthApplication.class, args);

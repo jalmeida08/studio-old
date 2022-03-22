@@ -30,7 +30,12 @@ public class GatewayApplication {
 							.setRequestHeader("Accept", MediaType.APPLICATION_JSON)
 							.setRequestHeader("Content-type", MediaType.APPLICATION_JSON))
 					.uri("http://localhost:8082"))
-
+				.route("studio_route", r -> r
+						.path("/studio/**")
+						.filters( f-> f.rewritePath("/studio", "")
+								.setRequestHeader("Accept", MediaType.APPLICATION_JSON)
+								.setRequestHeader("Content-type", MediaType.APPLICATION_JSON))
+						.uri("http://localhost:8083"))
 				.build();
 	}
 

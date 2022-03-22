@@ -3,9 +3,7 @@ package br.com.jsa.api.dto;
 import java.time.LocalDate;
 
 import br.com.jsa.infra.model.Funcionario;
-import lombok.Getter;
 
-@Getter
 public class FuncionarioDTO {
 
 	private String id;
@@ -17,7 +15,6 @@ public class FuncionarioDTO {
 		this.nome = f.getNome();
 		this.dataNascimento = f.getDataNascimento();
 	}
-
 	public String getId() {
 		return id;
 	}
@@ -29,7 +26,5 @@ public class FuncionarioDTO {
 	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
-	
-	
 	
 }
