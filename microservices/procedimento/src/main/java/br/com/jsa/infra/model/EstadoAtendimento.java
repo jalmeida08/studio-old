@@ -2,6 +2,6 @@ package br.com.jsa.infra.model;
 
 public enum EstadoAtendimento {
 	
-	AGENDADO, CANCELADO, FINALIZADO
+	AGENDADO, DESMARCADO, FINALIZADO
 	
 }

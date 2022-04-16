@@ -9,7 +9,16 @@ spring:
       filter:
         remove-request-header:
           enabled: false
-
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
 eureka:
   client:
     register-with-eureka: true

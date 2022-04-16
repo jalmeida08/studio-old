@@ -10,16 +10,23 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 
 @Configuration
 @EnableResourceServer
-@EnableGlobalMethodSecurity(prePostEnabled = true) // Allow method annotations like @PreAuthorize
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfigure extends ResourceServerConfigurerAdapter {
 	
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.sessionManagement()
-        	.sessionCreationPolicy(SessionCreationPolicy.NEVER)
-        .and()
-		.authorizeRequests()
-			.antMatchers(HttpMethod.PUT, "/funcionario**").authenticated()
-			.antMatchers(HttpMethod.GET, "/funcionario/lista").authenticated();
+    	.sessionCreationPolicy(SessionCreationPolicy.NEVER)
+			.and().authorizeRequests()
+			.antMatchers(HttpMethod.POST, "/funcionario").permitAll()
+            .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .anyRequest().authenticated();
+//		http.sessionManagement()
+//        	.sessionCreationPolicy(SessionCreationPolicy.NEVER)
+//        .and()
+//		.authorizeRequests()
+//			.antMatchers(HttpMethod.PUT, "/funcionario**").authenticated()
+//			.antMatchers(HttpMethod.GET, "/funcionario/lista").authenticated()
+//			.antMatchers("/acesso**").authenticated();
 	}
 }

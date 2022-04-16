@@ -1,6 +1,7 @@
 package br.com.jsa.infra.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -16,11 +17,14 @@ public class Procedimento implements Serializable {
 	private String nome;
 	private Double valor;
 	private Long tempoDuracao;
+	private LocalDateTime dataFimAtendimento;
 	private boolean ativo;
 	private List<String> funcionarios;
+	
 	@Version
 	private Long versao;
 
+	
 	public String getNome() {
 		return nome;
 	}
@@ -37,7 +41,7 @@ public class Procedimento implements Serializable {
 		this.valor = valor;
 	}
 
-	public float getTempoDuracao() {
+	public Long getTempoDuracao() {
 		return tempoDuracao;
 	}
 
@@ -67,6 +71,14 @@ public class Procedimento implements Serializable {
 
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public LocalDateTime getDataFimAtendimento() {
+		return dataFimAtendimento;
+	}
+
+	public void setDataFimAtendimento(LocalDateTime dataFimAtendimento) {
+		this.dataFimAtendimento = dataFimAtendimento;
 	}
 
 }

@@ -4,22 +4,30 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import br.com.jsa.infra.model.Atendimento;
 import br.com.jsa.infra.model.EstadoAtendimento;
-import br.com.jsa.infra.model.Procedimento;
 
 public class AtendimentoForm {
 
+	@NotBlank(message = "É obrigatório informar a qual cliente pertence esse atendimento")
+	private String idCliente;
 	private Float desconto;
-	private LocalDateTime dataAgendamento;
+//	@NotBlank(message = "Data agendamento é obrigatório")
+	private LocalDateTime dataHoraAtendimento;
 	private EstadoAtendimento estadoAtendimento;
+	@Size(min = 1, message = "É obrigatório escolher pelo menos um procedimento")
 	private List<String> procedimentos = new ArrayList<String>();
-	
+
 	public Atendimento toAtendimento() {
-		Atendimento a = new Atendimento();
+		var a = new Atendimento();
 		a.setDesconto(desconto);
-		a.setDataAgendamento(dataAgendamento);
+		a.setDataHoraAtendimento(dataHoraAtendimento);
 		a.setEstadoAtendimento(estadoAtendimento);
+		a.setProcedimentos(procedimentos);
+		a.setIdCliente(idCliente);
 		return a;
 	}
 
@@ -27,8 +35,8 @@ public class AtendimentoForm {
 		this.desconto = desconto;
 	}
 
-	public void setDataAgendamento(LocalDateTime dataAgendamento) {
-		this.dataAgendamento = dataAgendamento;
+	public void setDataHoraAtendimento(LocalDateTime dataAtendimento) {
+		this.dataHoraAtendimento = dataAtendimento;
 	}
 
 	public void setEstadoAtendimento(EstadoAtendimento estadoAtendimento) {
@@ -38,6 +46,29 @@ public class AtendimentoForm {
 	public void setProcedimentos(List<String> procedimentos) {
 		this.procedimentos = procedimentos;
 	}
-	
-	
+
+	public void setIdCliente(String idCliente) {
+		this.idCliente = idCliente;
+	}
+
+	public String getIdCliente() {
+		return idCliente;
+	}
+
+	public Float getDesconto() {
+		return desconto;
+	}
+
+	public LocalDateTime getDataHoraAtendimento() {
+		return dataHoraAtendimento;
+	}
+
+	public EstadoAtendimento getEstadoAtendimento() {
+		return estadoAtendimento;
+	}
+
+	public List<String> getProcedimentos() {
+		return procedimentos;
+	}
+
 }

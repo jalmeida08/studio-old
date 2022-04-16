@@ -1,20 +1,24 @@
 package br.com.jsa.api.client;
 
-import javax.ws.rs.core.MediaType;
-
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient("/cadastro-basico/cliente")
+import br.com.jsa.api.controller.ClienteDTO;
+import br.com.jsa.infra.feing.clientFallbackFactory;
+
+@FeignClient(
+		value = "cadastro-basico",
+		path = "/cliente",
+		contextId = "cadastroBasicoCliente",
+		fallbackFactory = clientFallbackFactory.class
+		)
 public interface ClienteClient {
 	
-	@RequestMapping(
-			method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON,
-			consumes = MediaType.APPLICATION_JSON,
-			value = "/valida-cliente"
-		)
-	public void validaClientePorId(String id);
+	@GetMapping(value = "/{idCliente}")
+	public void validaClientePorId(@PathVariable("idCliente") String id);
+
+	@GetMapping("/{idCliente}")
+	public ClienteDTO buscaClientePorId(@PathVariable("idCliente") String id);
 
 }

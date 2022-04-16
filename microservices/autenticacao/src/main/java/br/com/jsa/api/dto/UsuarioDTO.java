@@ -1,24 +1,40 @@
 package br.com.jsa.api.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import br.com.jsa.infra.model.Usuario;
 
 public class UsuarioDTO {
 	
+	private String id;
+	private String funcionarioId;
+	private String clienteId;
 	private String email;
-	private String senha;
+	private List<AcessoDTO> acesso;
 	
-	public Usuario toUsuario() {
-		Usuario u = new Usuario();
-		u.setEmail(this.email);
-		u.setSenha(this.senha);
-		return u;
+	public UsuarioDTO(Usuario u) {
+		this.id = u.getId();
+		this.funcionarioId = u.getFuncionarioId();
+		this.clienteId = u.getClienteId();
+		this.email = u.getEmail();
+		this.acesso = u.getAcesso().stream().map(AcessoDTO::new).collect(Collectors.toList());
 	}
 	
-	public void setEmail(String email) {
-		this.email = email;
+	public String getId() {
+		return id;
 	}
-	public void setSenha(String senha) {
-		this.senha = senha;
+	public String getFuncionarioId() {
+		return funcionarioId;
+	}
+	public String getClienteId() {
+		return clienteId;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public List<AcessoDTO> getAcesso() {
+		return acesso;
 	}
 	
 	

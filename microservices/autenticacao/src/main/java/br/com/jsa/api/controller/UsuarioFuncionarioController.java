@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,9 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.jsa.api.dto.AlteraSenhaUsuarioForm;
+import br.com.jsa.api.dto.UsuarioDTO;
 import br.com.jsa.api.dto.UsuarioForm;
+import br.com.jsa.api.form.IdAcessoForm;
 import br.com.jsa.api.service.UsuarioService;
-import br.com.jsa.infra.model.Usuario;
 
 @RestController
 @RequestMapping("/funcionario")
@@ -40,15 +41,12 @@ public class UsuarioFuncionarioController {
 	}
 	
 	@GetMapping
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('CEO')")  
 	public ResponseEntity<?> listaUsuario() {
-		List<Usuario> u = usuarioService.listaUsuario();
+		List<UsuarioDTO> u = usuarioService.listaUsuario();
 		return ResponseEntity.ok(u);
 	}
-	@GetMapping("/lista")
-	public ResponseEntity<?> lista() {
-		List<Usuario> u = usuarioService.listaUsuario();
-		return ResponseEntity.ok(u);
-	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<?> buscaUsuarioPorId(@PathVariable("id") String id){
 		return ResponseEntity.ok(this.usuarioService.getUsuarioPorId(id));
@@ -57,10 +55,24 @@ public class UsuarioFuncionarioController {
 	@PutMapping
 	@Transactional
 	public ResponseEntity<?> alteraSenhaFuncionario( @RequestBody AlteraSenhaUsuarioForm alteraSenhaUsuarioForm) {
-		
 		this.usuarioService.alteraSenhaUsuario(alteraSenhaUsuarioForm);
 		return ResponseEntity.ok().build();
-		
+	}
+	
+	@PutMapping("/{idUsuario}/concede-acesso")
+	@Transactional
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('CEO')") 
+	public ResponseEntity<?> concedeAcessoAUsuario(@PathVariable String idUsuario, @RequestBody IdAcessoForm acessoForm){
+		usuarioService.concedeACesso(idUsuario, acessoForm.getAcesso());
+		return ResponseEntity.ok().build();
+	}
+	
+	@PutMapping("/{idUsuario}/remove-acesso")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('CEO')") 
+	@Transactional
+	public ResponseEntity<?> removeAcessoAUsuario(@PathVariable String idUsuario, @RequestBody IdAcessoForm acessoForm){
+		usuarioService.removeACesso(idUsuario, acessoForm.getAcesso());
+		return ResponseEntity.ok().build();
 	}
 
 }

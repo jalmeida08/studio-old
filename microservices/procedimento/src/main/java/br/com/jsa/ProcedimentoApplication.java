@@ -34,6 +34,7 @@ public class ProcedimentoApplication {
 			@Override
 			public void apply(RequestTemplate template) {
 				template.headers().entrySet().stream().forEach(i -> System.out.println("# HEAD: "+i+" #"));
+				System.out.println(template.url());
 				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 				if(authentication == null)
 					return;
@@ -44,6 +45,7 @@ public class ProcedimentoApplication {
 		};
 	}
 	
+
 	public static void main(String[] args) {
 		SpringApplication.run(ProcedimentoApplication.class, args);
 	}

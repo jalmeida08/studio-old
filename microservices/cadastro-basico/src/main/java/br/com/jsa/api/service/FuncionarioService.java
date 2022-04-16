@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import br.com.jsa.api.dto.FuncionarioDTO;
 import br.com.jsa.api.dto.VerificaIdFuncionarioDTO;
 import br.com.jsa.api.form.FuncionarioForm;
+import br.com.jsa.infra.exception.ParametroInvalidoException;
 import br.com.jsa.infra.model.Funcionario;
 import br.com.jsa.infra.repository.FuncionarioRepository;
 

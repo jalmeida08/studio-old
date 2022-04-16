@@ -41,7 +41,6 @@ public class ProcedimentoService {
 			
 			this.procedimentoRepository.save(procedimentoForm.toProcedimento());		
 		}catch(NegocioException e) {
-			System.out.println("### LANÇANDO EXCEPTION ###");
 			throw new NegocioException(e.getMessage());
 		}
 	}
@@ -51,7 +50,7 @@ public class ProcedimentoService {
 		List<VerificaIdFuncionarioDTO> lstFuncionariosValidos =
 				this.funcionarioClient.idFuncionarioIsValid(idFuncionario);
 		
-		lstFuncionariosValidos.stream().forEach(f -> {
+		lstFuncionariosValidos.forEach(f -> {
 			if(!f.isValido()) 
 				throw new NegocioException("O funcionario com o id "+ f.getIdFuncionario() + " é invpalido");
 		});
@@ -69,10 +68,10 @@ public class ProcedimentoService {
 	public DetalheProcedimentoDTO consultaProcedimento(String id) {
 		Procedimento p = buscaProcedimentoPorId(id);
 		List<FuncionarioDTO> lstDadosFunci = new ArrayList<FuncionarioDTO>();
-		if(p.getFuncionarios().size() > 0) {
+		if(p.getFuncionarios().size() > 0) 
 			lstDadosFunci =
 					funcionarioClient.consultaDadosListaFuncionario(p.getFuncionarios());
-		}
+		
 		return new DetalheProcedimentoDTO(p, lstDadosFunci);
 	}
 

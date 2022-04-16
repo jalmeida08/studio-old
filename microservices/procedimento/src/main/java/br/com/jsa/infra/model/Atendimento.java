@@ -19,7 +19,8 @@ public class Atendimento implements Serializable {
 	private String idCliente;
 	private Double valor;
 	private Float desconto;
-	private LocalDateTime dataAgendamento;
+	private LocalDateTime dataHoraAtendimento;
+	private LocalDateTime dataHoraFimAtendimento;
 	private EstadoAtendimento estadoAtendimento;
 	private List<String> procedimentos = new ArrayList<String>();
 	@Version
@@ -49,12 +50,20 @@ public class Atendimento implements Serializable {
 		this.desconto = desconto;
 	}
 
-	public LocalDateTime getDataAgendamento() {
-		return dataAgendamento;
+	public LocalDateTime getDataHoraAtendimento() {
+		return dataHoraAtendimento;
 	}
 
-	public void setDataAgendamento(LocalDateTime dataAgendamento) {
-		this.dataAgendamento = dataAgendamento;
+	public void setDataHoraAtendimento(LocalDateTime dataHoraAtendimento) {
+		this.dataHoraAtendimento = dataHoraAtendimento;
+	}
+
+	public LocalDateTime getDataHoraFimAtendimento() {
+		return dataHoraFimAtendimento;
+	}
+
+	public void setDataHoraFimAtendimento(LocalDateTime dataHoraFimAtendimento) {
+		this.dataHoraFimAtendimento = dataHoraFimAtendimento;
 	}
 
 	public EstadoAtendimento getEstadoAtendimento() {

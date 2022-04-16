@@ -11,7 +11,8 @@ public class Acesso implements GrantedAuthority{
 
 	private static final long serialVersionUID = -1232602904052160097L;
 	@Id
-	private Long id;
+	private String id;
+	private String descricao;
 	private String nome;
 	@Version
 	private Integer versao;
@@ -24,12 +25,20 @@ public class Acesso implements GrantedAuthority{
 		this.nome = nome;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
 	public Integer getVersao() {
 		return versao;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	@Override

@@ -21,6 +21,10 @@ public class GatewayApplication {
 	public RouteLocator rotas(RouteLocatorBuilder builder) {
 		return builder.routes()
 				.route("autenticacao_route", r -> r
+						.path("/autenticacao/**")
+						.filters( f-> f.rewritePath("/autenticacao", ""))
+						.uri("http://localhost:8088"))
+				.route("usuario_route", r -> r
 						.path("/usuario/**")
 						.filters( f-> f.rewritePath("/usuario", ""))
 						.uri("http://localhost:8081"))

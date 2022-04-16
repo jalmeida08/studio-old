@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.jsa.api.dto.ClienteDTO;
 import br.com.jsa.api.form.ClienteForm;
+import br.com.jsa.infra.exception.ParametroInvalidoException;
 import br.com.jsa.infra.model.Cliente;
 import br.com.jsa.infra.repository.ClienteRepository;
 
