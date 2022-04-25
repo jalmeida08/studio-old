@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 import br.com.jsa.api.client.ClienteClient;
-import br.com.jsa.api.controller.ClienteDTO;
+import br.com.jsa.api.dto.ClienteDTO;
 import br.com.jsa.infra.exception.NegocioException;
 import feign.FeignException;
 

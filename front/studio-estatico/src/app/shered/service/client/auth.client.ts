@@ -7,7 +7,7 @@ import { AccessToken } from '../../model/access-token';
 import { Login } from '../../model/login';
 
 @Injectable({providedIn: 'root'})
-export class AuthService {
+export class AuthClient {
 
     constructor(
         private http:HttpClient,

@@ -17,17 +17,26 @@ public class Atendimento implements Serializable {
 	@Id
 	private String id;
 	private String idCliente;
+	private String idFuncionario;
 	private Double valor;
 	private Float desconto;
 	private LocalDateTime dataHoraAtendimento;
 	private LocalDateTime dataHoraFimAtendimento;
 	private EstadoAtendimento estadoAtendimento;
-	private List<String> procedimentos = new ArrayList<String>();
+	private List<String> procedimentos = new ArrayList<>();
 	@Version
 	private Long versao;
 
 	public String getIdCliente() {
 		return idCliente;
+	}
+
+	public String getIdFuncionario() {
+		return idFuncionario;
+	}
+
+	public void setIdFuncionario(String idFuncionario) {
+		this.idFuncionario = idFuncionario;
 	}
 
 	public void setIdCliente(String idCliente) {
@@ -89,5 +98,4 @@ public class Atendimento implements Serializable {
 	public void setProcedimentos(List<String> procedimentos) {
 		this.procedimentos = procedimentos;
 	}
-
 }

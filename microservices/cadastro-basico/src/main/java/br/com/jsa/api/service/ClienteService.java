@@ -1,5 +1,6 @@
 package br.com.jsa.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,22 @@ public class ClienteService {
 				.findAll()
 				.stream()
 				.map(ClienteDTO::new).collect(Collectors.toList());
+	}
+
+	public List<ClienteDTO> buscaCliente(ClienteForm clienteForm) {
+		List<Cliente> listaCliente = new ArrayList<>();
+		if (clienteForm.getNome().length() >= 3 && clienteForm.getDataNascimento() != null)
+			listaCliente = clienteRepository.findByDataNascimentoAndNomeLikeIgnoreCase(clienteForm.getNome(), clienteForm.getDataNascimento());
+		else if(clienteForm.getNome().length() >= 3)
+			listaCliente = clienteRepository.findByNomeLikeIgnoreCase(clienteForm.getNome());
+		else if(clienteForm.getDataNascimento() != null) 
+			listaCliente = clienteRepository.findByDataNascimento(clienteForm.getDataNascimento());
+		else throw new ParametroInvalidoException("Parametros informado para busca invalidos");
+		
+		return listaCliente
+				.stream()
+				.map(ClienteDTO::new)
+				.collect(Collectors.toList());
 	}
 	
 	

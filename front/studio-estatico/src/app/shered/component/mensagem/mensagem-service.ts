@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Mensagem, TipoMensagem } from '../../model/mensagem';
 
 @Injectable({providedIn: 'root'})
@@ -29,7 +29,7 @@ export class MensagemService {
         this.mensagemSubject.next(new Mensagem(tipoMensagem, mensagem));
     }
 
-    getMensagem() {
+    getMensagem():Observable<Mensagem|null> {
         return this.mensagemSubject.asObservable();
     }    
 

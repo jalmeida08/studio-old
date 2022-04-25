@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,12 @@ public class ClienteController {
 	public ResponseEntity<?> buscaClientePorId(@PathVariable("idCliente") String id){
 		ClienteDTO dto = clienteService.buscaClientePorId(id);
 		return ResponseEntity.ok(dto);
+	}
+
+	@PostMapping("/busca-cliente")
+	public ResponseEntity<?> buscaClientePorNome(@RequestBody ClienteForm clienteForm){
+		List<ClienteDTO> lstCliente = clienteService.buscaCliente(clienteForm);
+		return ResponseEntity.ok(lstCliente);
 	}
 
 	

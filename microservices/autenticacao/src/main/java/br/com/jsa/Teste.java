@@ -1,15 +1,21 @@
 package br.com.jsa;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Teste {
 	
 	public static void main(String[] args) {
-		var anoMesDia = "20220316";
-		final var ano = Integer.valueOf(anoMesDia.substring(0,4));
-		final var mes = Integer.valueOf(anoMesDia.substring(5,6));
-		final var dia = Integer.valueOf(anoMesDia.substring(7));
-		System.out.println(LocalDate.of(ano, mes, dia));
+		var lst = new ArrayList<String>();
+		var a = List.of("teste");
+		var b = List.of("teste 2");
+		var c = List.of("teste 3");
+		var d = List.of("teste 4");
+		lst.addAll(a);
+		lst.addAll(b);
+		lst.addAll(c);
+		lst.addAll(d);
+		System.out.println(lst);
 		
 		
 	}

@@ -1,4 +1,4 @@
-package br.com.jsa.api.controller;
+package br.com.jsa.api.dto;
 
 import java.time.LocalDate;
 

@@ -2,39 +2,41 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Atendimento } from 'src/app/shered/model/atendimento';
-import { AtendimentoService } from 'src/app/shered/service/atendimento.service';
+import { AtendimentoClient } from 'src/app/shered/service/client/atendimento.client';
 
 @Component({
     selector: 'home-app',
-    templateUrl: 'home.component.html'
+    templateUrl: 'home.component.html',
+    styleUrls: ['./home.component.scss']
 })
 
 export class HomeComponent implements OnInit, OnDestroy {
 
     private destroy$ = new Subject<boolean>();
     constructor(
-        private atendimentoService: AtendimentoService
+        private atendimentoClient: AtendimentoClient
     ) { }
     
     
     ngOnInit() {
-        console.log("CHAMANDO...");        
-        this.carregarAtendimentoDia();
+        this.carregarAtendimentoDia(new Date());
     }
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.unsubscribe();
     }
-    
-    carregarAtendimentoDia() {
-        console.log("tuuuu...");
-        this.atendimentoService
-            .listaAtendimentoDia(new Date())
+
+    recebeDiaSelecionadoEvent(diaSelecionado: Date) {
+        this.carregarAtendimentoDia(diaSelecionado);        
+    }
+
+    private carregarAtendimentoDia(data:Date) {
+        this.atendimentoClient
+            .listaAtendimentoDia(data)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next:(res:Atendimento[]) => console.log(res),
                 error:(err: HttpErrorResponse) => console.error(err)
-                
-            })
+            });
     }
 }

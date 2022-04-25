@@ -13,6 +13,8 @@ public interface AtendimentoRepository extends MongoRepository<Atendimento, Stri
 
 	public List<Atendimento> findBydataHoraAtendimento(LocalDateTime dataHoraAtendimento);
 	
+	public List<Atendimento> findByDataHoraAtendimentoBetweenAndIdFuncionarioAndEstadoAtendimento(LocalDateTime dataHora1, LocalDateTime dataHora2, String idFuncionario, String estadoAtendimento);
+
 	public List<Atendimento> findByDataHoraAtendimentoBetweenAndEstadoAtendimento(LocalDateTime dataHora1, LocalDateTime dataHora2, String estadoAtendimento);
 
 }

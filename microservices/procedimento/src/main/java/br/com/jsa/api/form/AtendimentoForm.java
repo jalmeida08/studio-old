@@ -14,12 +14,13 @@ public class AtendimentoForm {
 
 	@NotBlank(message = "É obrigatório informar a qual cliente pertence esse atendimento")
 	private String idCliente;
+	private String idFuncionario;
 	private Float desconto;
 //	@NotBlank(message = "Data agendamento é obrigatório")
 	private LocalDateTime dataHoraAtendimento;
 	private EstadoAtendimento estadoAtendimento;
 	@Size(min = 1, message = "É obrigatório escolher pelo menos um procedimento")
-	private List<String> procedimentos = new ArrayList<String>();
+	private List<String> procedimentos = new ArrayList<>();
 
 	public Atendimento toAtendimento() {
 		var a = new Atendimento();
@@ -28,6 +29,7 @@ public class AtendimentoForm {
 		a.setEstadoAtendimento(estadoAtendimento);
 		a.setProcedimentos(procedimentos);
 		a.setIdCliente(idCliente);
+		a.setIdFuncionario(idFuncionario);
 		return a;
 	}
 
@@ -69,6 +71,10 @@ public class AtendimentoForm {
 
 	public List<String> getProcedimentos() {
 		return procedimentos;
+	}
+
+	public String getIdFuncionario() {
+		return idFuncionario;
 	}
 
 }

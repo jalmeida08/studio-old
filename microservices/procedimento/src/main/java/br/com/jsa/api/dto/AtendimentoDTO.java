@@ -11,12 +11,13 @@ public class AtendimentoDTO {
 
 	private String id;
 	private String idCliente;
+	private String idFuncionario;
 	private Double valor;
 	private Float desconto;
 	private LocalDateTime dataHoraAtendimento;
 	private LocalDateTime dataHoraFimAtendimento;
 	private EstadoAtendimento estadoAtendimento;
-	private List<String> procedimentos = new ArrayList<String>();
+	private List<String> procedimentos = new ArrayList<>();
 
 	public AtendimentoDTO(Atendimento a) {
 		id = a.getId();
@@ -27,6 +28,7 @@ public class AtendimentoDTO {
 		dataHoraFimAtendimento = a.getDataHoraFimAtendimento();
 		estadoAtendimento = a.getEstadoAtendimento();
 		procedimentos = a.getProcedimentos();
+		idFuncionario = a.getIdFuncionario();
 	}
 
 	public String getId() {
@@ -61,4 +63,7 @@ public class AtendimentoDTO {
 		return procedimentos;
 	}
 
+	public String getIdFuncionario() {
+		return idFuncionario;
+	}
 }

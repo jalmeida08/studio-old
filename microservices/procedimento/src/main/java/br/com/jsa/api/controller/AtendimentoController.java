@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.jsa.api.dto.AtendimentoDTO;
 import br.com.jsa.api.dto.AtendimentoDia;
+import br.com.jsa.api.dto.BuscaDadosAgendaFuncionarioDTO;
+import br.com.jsa.api.dto.ClienteDTO;
 import br.com.jsa.api.form.AtendimentoForm;
 import br.com.jsa.api.service.AtendimentoService;
 
@@ -59,11 +61,11 @@ public class AtendimentoController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@PostMapping("/calcula-valor-atendimento")
-	public ResponseEntity<?> calculaValorAtendimento(@RequestBody List<String> listaProcedimentos){
-		final Double calculaValorAtendimento = atendimentoService.calculaValorAtendimento(listaProcedimentos);
-		return ResponseEntity.ok(calculaValorAtendimento);
-	}
+//	@PostMapping("/calcula-valor-atendimento")
+//	public ResponseEntity<?> calculaValorAtendimento(@RequestBody List<String> listaProcedimentos){
+//		final Double calculaValorAtendimento = atendimentoService.calculaValorAtendimento(listaProcedimentos);
+//		return ResponseEntity.ok(calculaValorAtendimento);
+//	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> teste(@PathVariable("id") String id){
@@ -89,5 +91,13 @@ public class AtendimentoController {
 	public ResponseEntity<?> finalizaAtendimento(@PathVariable("id") String id){
 		atendimentoService.finalizaAtendimento(id);
 		return ResponseEntity.ok().build();
+	}
+	
+	@PostMapping("/agenda-dia-funcionario")
+	public ResponseEntity<?> buscaAgendaFuncionario(@RequestBody BuscaDadosAgendaFuncionarioDTO buscaAgenda){
+		List<AtendimentoDTO> listaAtendimento = 
+				atendimentoService.buscaAgendaFuncionarioDia(buscaAgenda);
+		return  ResponseEntity.ok(listaAtendimento);
+		
 	}
 }

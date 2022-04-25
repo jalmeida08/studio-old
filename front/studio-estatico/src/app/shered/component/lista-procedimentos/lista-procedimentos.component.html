@@ -1,0 +1,46 @@
+<div class="row">
+    <div class="col-4">
+        <div class="list-group" id="list-tab" role="tablist">
+            <a
+                *ngFor="let item of listaProcedimento"
+                class="list-group-item list-group-item-action"
+                id="list-home-list"
+                data-bs-toggle="list"
+                href="#list-funci"
+                role="tab"
+                aria-controls="list-home"
+                (click)="buscaDadosProfissional(item)"
+                >
+                <div class="row">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">{{ item.nome }}</h6>
+                        <small>{{ item.valor | currency: 'BRL' }}</small>
+                    </div>
+                    <small>Duração: {{ mostrarDuracao(item.tempoDuracao) }} </small>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="list-group" id="list-tab" role="tablist">
+            <a
+                *ngFor="let item of listaFuncionario"
+                class="list-group-item list-group-item-action"
+                id="list-home-list"
+                data-bs-toggle="list"
+                href="#list-home"
+                role="tab"
+                aria-controls="list-home"
+                (click)="selecionaFuncionario(item)"
+            >
+                <div class="row">
+                    <div class="col-7">{{ item.nome }}</div>
+                </div>
+            </a>
+        </div>
+        
+    </div>
+    <div class="col-4">
+        <button type="button" (click)="addProcedimentoLista()" class="btn btn-primary">Adicionar outro</button>
+    </div>
+</div>

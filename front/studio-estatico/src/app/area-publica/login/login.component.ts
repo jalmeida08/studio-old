@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Subject, takeUntil } from "rxjs";
 import { MensagemService } from "src/app/shered/component/mensagem/mensagem-service";
 import { Login } from "src/app/shered/model/login";
-import { AuthService } from "src/app/shered/service/client/auth.service";
+import { AuthClient } from "src/app/shered/service/client/auth.client";
 
 @Component({
     templateUrl: './login.component.html'
@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     formLogin = new FormGroup({});
     
     constructor(
-        private authService: AuthService,
+        private authClient: AuthClient,
         private mensagemService: MensagemService
     ) {}
     
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     login():void {
         const dadosUsuario = this.formLogin.value as Login;
-        this.authService
+        this.authClient
             .login(dadosUsuario)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
