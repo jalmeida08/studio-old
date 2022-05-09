@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.jsa.api.dto.AdicionaFuncionarioProcedimentoDTO;
 import br.com.jsa.api.dto.DetalheProcedimentoDTO;
 import br.com.jsa.api.dto.ProcedimentoDTO;
 import br.com.jsa.api.form.ProcedimentoForm;
@@ -47,5 +49,12 @@ public class ProcedimentoController {
 	public ResponseEntity<?> consultaProcedimento(@PathVariable("id") String id) {
 		DetalheProcedimentoDTO detalheProcedimento = this.procedimentoService.consultaProcedimento(id);
 		return ResponseEntity.ok(detalheProcedimento);
+	}
+	
+	@PutMapping("/adiciona-funcionario")
+	@Transactional
+	public ResponseEntity<?> adicionaFuncionarioProcedimento(@RequestBody AdicionaFuncionarioProcedimentoDTO dto) {
+		procedimentoService.adicionaFuncionarioProcedimento(dto);
+		return ResponseEntity.ok().build();
 	}
 }

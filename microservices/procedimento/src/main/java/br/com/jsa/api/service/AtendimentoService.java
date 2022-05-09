@@ -12,9 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.jsa.api.client.ClienteClient;
+import br.com.jsa.api.client.FuncionarioClient;
 import br.com.jsa.api.dto.AtendimentoDTO;
+import br.com.jsa.api.dto.AtendimentoDetalhadoDTO;
+import br.com.jsa.api.dto.AtendimentoHomeDTO;
 import br.com.jsa.api.dto.BuscaDadosAgendaFuncionarioDTO;
 import br.com.jsa.api.dto.ClienteDTO;
+import br.com.jsa.api.dto.FuncionarioDTO;
+import br.com.jsa.api.dto.ProcedimentoAtendimentoDTO;
 import br.com.jsa.api.dto.ValidaInclusaoAtendimentoDTO;
 import br.com.jsa.api.form.AtendimentoForm;
 import br.com.jsa.dominio.bo.AtendimentoBO;
@@ -38,6 +43,9 @@ public class AtendimentoService {
 	
 	@Autowired
 	private ClienteClient clienteClient;
+	
+	@Autowired
+	private FuncionarioClient funcionarioClient;
 	
 	private Atendimento getAtendimento(String id) {
 		return atendimentoRepository
@@ -72,7 +80,7 @@ public class AtendimentoService {
 			LocalDateTime dataHora1, LocalDateTime dataHora2, String estadoAtendimento, String idFuncionario){
 		return 
 				atendimentoRepository
-						.findByDataHoraAtendimentoBetweenAndIdFuncionarioAndEstadoAtendimento(
+						.findByDataHoraAtendimentoBetweenAndIdFuncionarioAndEstadoAtendimentoOrderByDataHoraAtendimentoAsc(
 								dataHora1, dataHora2, idFuncionario, estadoAtendimento);
 	}
 	
@@ -162,23 +170,32 @@ public class AtendimentoService {
 			dataInicio = DateUtil.retornaDataInicio(anoMes);
 			dataFim = DateUtil.retornaDataFim(anoMes);
 		}
+		var listaEstadoAtendimento = List.of(EstadoAtendimento.AGENDADO.name(), EstadoAtendimento.FINALIZADO.name());
 		return atendimentoRepository
-			.findByDataHoraAtendimentoBetweenAndEstadoAtendimento(
-					dataInicio, dataFim, EstadoAtendimento.AGENDADO.name())
+			.findByDataHoraAtendimentoBetweenAndEstadoAtendimentoInOrderByDataHoraAtendimentoAsc(
+					dataInicio, dataFim, listaEstadoAtendimento)
 			.stream()
 			.map(AtendimentoDTO::new)
 			.collect(Collectors.toList());
 	}
 	
-	public List<AtendimentoDTO> listaAtendimentoDiaInformado(LocalDate dataInformada) {
+	public List<AtendimentoHomeDTO> listaAtendimentoDiaInformado(LocalDate dataInformada) {
 		final var dataInicio = dataInformada.atTime(LocalTime.MIN);
 		final var dataFim = dataInformada.atTime(LocalTime.MAX);
-		return atendimentoRepository
-			.findByDataHoraAtendimentoBetweenAndEstadoAtendimento(
-					dataInicio, dataFim, EstadoAtendimento.AGENDADO.name())
-			.stream()
-			.map(AtendimentoDTO::new)
-			.collect(Collectors.toList());
+		var listaAtendimento = new ArrayList<AtendimentoHomeDTO>();
+		var listaEstadoAtendimento = List.of(EstadoAtendimento.AGENDADO.name(), EstadoAtendimento.FINALIZADO.name());
+		atendimentoRepository
+			.findByDataHoraAtendimentoBetweenAndEstadoAtendimentoInOrderByDataHoraAtendimentoAsc(
+					dataInicio, dataFim, listaEstadoAtendimento)
+			.forEach(a -> {
+				var c = clienteClient.buscaClientePorId(a.getIdCliente());
+				System.out.println(a.getIdFuncionario());
+				var f = funcionarioClient.consultaFuncionarioPorId(a.getIdFuncionario());
+				listaAtendimento.add(new AtendimentoHomeDTO(a, c, f));
+			});
+		return listaAtendimento;
+			
+			
 	}
 
 	public List<AtendimentoDTO> buscaAgendaFuncionarioDia(BuscaDadosAgendaFuncionarioDTO buscaAgenda) {
@@ -186,12 +203,25 @@ public class AtendimentoService {
 		var dataHoraFim = LocalDateTime.of(buscaAgenda.getDia(), LocalTime.MAX);
 		
 		return atendimentoRepository
-			.findByDataHoraAtendimentoBetweenAndIdFuncionarioAndEstadoAtendimento(
+			.findByDataHoraAtendimentoBetweenAndIdFuncionarioAndEstadoAtendimentoOrderByDataHoraAtendimentoAsc(
 					dataHoraInicio, dataHoraFim, buscaAgenda.getId(), EstadoAtendimento.AGENDADO.name())
 			.stream()
 			.map(AtendimentoDTO::new)
 			.collect(Collectors.toList());
 		
+	}
+
+	public AtendimentoDetalhadoDTO consultaDadosAtendimento(String id) {
+		Atendimento a = getAtendimento(id);
+		ClienteDTO c = clienteClient.buscaClientePorId(a.getIdCliente());
+		FuncionarioDTO f = funcionarioClient.consultaFuncionarioPorId(a.getIdFuncionario());
+		var listaProcedimento = a.getProcedimentos()
+			.stream()
+			.map(p -> new ProcedimentoAtendimentoDTO(procedimentoRepository.findById(p).get()))
+			.collect(Collectors.toList());
+
+			
+		return new AtendimentoDetalhadoDTO(a, c, f, listaProcedimento);
 	}
 	
 }

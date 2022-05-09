@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,8 @@ public class ClienteController {
 	@PostMapping
 	@Transactional
 	public ResponseEntity<?> salvaCliente (@RequestBody ClienteForm clienteForm) {
-		clienteService.salvaCliente(clienteForm);
-		return ResponseEntity.ok().build();
+		ClienteDTO c = clienteService.salvaCliente(clienteForm);
+		return ResponseEntity.ok(c);
 	}
 	
 	@GetMapping

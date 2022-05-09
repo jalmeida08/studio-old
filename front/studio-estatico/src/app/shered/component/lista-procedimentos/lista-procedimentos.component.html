@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-4">
+    <div class="col">
         <div class="list-group" id="list-tab" role="tablist">
             <a
                 *ngFor="let item of listaProcedimento"
@@ -21,7 +21,7 @@
             </a>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col">
         <div class="list-group" id="list-tab" role="tablist">
             <a
                 *ngFor="let item of listaFuncionario"
@@ -40,7 +40,7 @@
         </div>
         
     </div>
-    <div class="col-4">
-        <button type="button" (click)="addProcedimentoLista()" class="btn btn-primary">Adicionar outro</button>
-    </div>
+</div>
+<div class="col-4 mt-2">
+    <button type="button" (click)="addProcedimentoLista()" class="btn btn-primary">Adicionar</button>
 </div>

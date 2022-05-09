@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { Atendimento } from '../../model/atendimento';
 import { Funcionario } from '../../model/funcionario';
 import { Procedimento } from '../../model/procedimento';
 import { DadosFuncionarioClient } from '../../service/client/dados-funcionario.client';
@@ -16,12 +15,11 @@ import { PacoteAtendimento } from './pacote-atendimento';
 
 export class ListaProcedimentoComponent implements OnInit, OnDestroy {
 
+    @Output() enviaProcedimentoSelecionadoEvent = new EventEmitter();
     private $destroy = new Subject<boolean>();
     private procedimento = new Procedimento();
     private funcionario = new Funcionario();
-    private listaProcedimentoSelecionado = new Array<Procedimento>();
-    private pacoteAtendimento!: PacoteAtendimento;
-    @Output() enviaProcedimentoSelecionadoEvent = new EventEmitter();
+    private procedimentoSelecionado = new Procedimento();
     listaProcedimento = new Array<Procedimento>();
     listaFuncionario = new Array<Funcionario>();
 
@@ -59,13 +57,15 @@ export class ListaProcedimentoComponent implements OnInit, OnDestroy {
     }
     
     addProcedimentoLista(){
-        this.listaProcedimentoSelecionado.push(this.procedimento); 
+        this.procedimentoSelecionado = this.procedimento; 
         this.enviaProcedimento();
+        this.procedimentoSelecionado = new Procedimento();
     }
     
     private enviaProcedimento(){
         let pacoteProcedimento = 
-            new PacoteAtendimento(this.listaProcedimentoSelecionado, this.funcionario);
+            new PacoteAtendimento(this.procedimentoSelecionado, this.funcionario);
+
         this.enviaProcedimentoSelecionadoEvent.emit(pacoteProcedimento);
     }
 

@@ -11,10 +11,10 @@ import br.com.jsa.infra.model.Atendimento;
 @Repository
 public interface AtendimentoRepository extends MongoRepository<Atendimento, String>{
 
-	public List<Atendimento> findBydataHoraAtendimento(LocalDateTime dataHoraAtendimento);
+	public List<Atendimento> findBydataHoraAtendimentoOrderByDataHoraAtendimentoAsc(LocalDateTime dataHoraAtendimento);
 	
-	public List<Atendimento> findByDataHoraAtendimentoBetweenAndIdFuncionarioAndEstadoAtendimento(LocalDateTime dataHora1, LocalDateTime dataHora2, String idFuncionario, String estadoAtendimento);
+	public List<Atendimento> findByDataHoraAtendimentoBetweenAndIdFuncionarioAndEstadoAtendimentoOrderByDataHoraAtendimentoAsc(LocalDateTime dataHora1, LocalDateTime dataHora2, String idFuncionario, String estadoAtendimento);
 
-	public List<Atendimento> findByDataHoraAtendimentoBetweenAndEstadoAtendimento(LocalDateTime dataHora1, LocalDateTime dataHora2, String estadoAtendimento);
+	public List<Atendimento> findByDataHoraAtendimentoBetweenAndEstadoAtendimentoInOrderByDataHoraAtendimentoAsc(LocalDateTime dataHora1, LocalDateTime dataHora2, List<String> estadoAtendimento);
 
 }

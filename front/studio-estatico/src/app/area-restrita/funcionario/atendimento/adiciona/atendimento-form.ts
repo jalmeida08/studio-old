@@ -6,7 +6,9 @@ export class AtendimentoForm {
     idFuncionario!:string;
     valor!: string;
     desconto!:number;
-    dataHoraAtendimento!: Date;
+    dataHoraAtendimento!: string;
     estadoAtendimento!: EstadoAtendimento;
-    procedimentos!: Array<string>;
+    procedimentos = new Array<string>();
+
+    constructor() {}
 }

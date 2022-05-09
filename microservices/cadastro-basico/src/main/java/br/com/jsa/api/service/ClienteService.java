@@ -29,8 +29,9 @@ public class ClienteService {
 		return new ClienteDTO(getCliente(id));
 	}
 	
-	public void salvaCliente(ClienteForm clienteForm) {
-		this.clienteRepository.save(clienteForm.toCliente());
+	public ClienteDTO salvaCliente(ClienteForm clienteForm) {
+		Cliente c = this.clienteRepository.save(clienteForm.toCliente());
+		return new ClienteDTO(c);
 	}
 
 	public List<ClienteDTO> listaCliente() {

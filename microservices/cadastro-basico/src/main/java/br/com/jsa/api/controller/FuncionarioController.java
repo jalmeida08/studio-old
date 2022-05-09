@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +48,13 @@ public class FuncionarioController {
 		List<VerificaIdFuncionarioDTO> verificaFunciDTO =
 				this.funcionarioService.verificaFuncionario(listaIdFuncionario);
 		return ResponseEntity.ok(verificaFunciDTO);
+	}
+	
+	@GetMapping("/{idFuncionario}")
+	public ResponseEntity<?> buscaFuncionarioPorId(@PathVariable("idFuncionario") String id) {
+		FuncionarioDTO f = funcionarioService.consultaFuncionarioPorId(id);
+		return ResponseEntity.ok(f);
+		
 	}
 	
 	@PostMapping("/consulta-lista")

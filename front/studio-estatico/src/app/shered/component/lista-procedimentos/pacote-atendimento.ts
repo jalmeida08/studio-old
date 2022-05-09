@@ -3,11 +3,11 @@ import { Procedimento } from "../../model/procedimento";
 
 export class PacoteAtendimento {
 
-    listaProcedimento = new Array<Procedimento>();
+    procedimento = new Procedimento();
     funcionario = new Funcionario();
 
-    constructor(lstProcedimento:Procedimento[], funcionario:Funcionario){
+    constructor(procedimento:Procedimento, funcionario:Funcionario){
         this.funcionario = funcionario;
-        this.listaProcedimento = lstProcedimento;
+        this.procedimento = procedimento;
     }
 }

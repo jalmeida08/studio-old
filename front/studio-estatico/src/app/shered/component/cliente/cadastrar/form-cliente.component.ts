@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subject, take, takeUntil } from 'rxjs';
+import { FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { Cliente } from 'src/app/shered/model/cliente';
 
 @Component({

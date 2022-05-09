@@ -1,0 +1,19 @@
+import { Procedimento } from "./procedimento";
+
+export class ProcedimentoAtendimento {
+
+    id!: string;
+	nome!: string;
+	valor!: number;
+	ativo!: boolean;
+
+    constructor() { }
+
+	procedimentoToProcedimentoAtendimento(a:Procedimento):ProcedimentoAtendimento {
+		this.id = a.id;
+		this.nome = a.nome;
+		this.valor = a.valor;
+		this.ativo = a.ativo
+		return this;
+	}
+}

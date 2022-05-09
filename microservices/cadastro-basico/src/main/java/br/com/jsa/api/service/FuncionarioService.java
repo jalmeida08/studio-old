@@ -62,6 +62,11 @@ public class FuncionarioService {
 			});
 		return listaDadosFuncionario;
 	}
+
+	public FuncionarioDTO consultaFuncionarioPorId(String id) {
+		Funcionario f = getFuncionario(id);
+		return new FuncionarioDTO(f);
+	}
 	
 	
 }

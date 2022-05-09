@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.jsa.api.dto.AtendimentoDTO;
-import br.com.jsa.api.dto.AtendimentoDia;
+import br.com.jsa.api.dto.AtendimentoDetalhadoDTO;
+import br.com.jsa.api.dto.AtendimentoDiaDTO;
 import br.com.jsa.api.dto.BuscaDadosAgendaFuncionarioDTO;
-import br.com.jsa.api.dto.ClienteDTO;
 import br.com.jsa.api.form.AtendimentoForm;
 import br.com.jsa.api.service.AtendimentoService;
 
@@ -48,7 +48,7 @@ public class AtendimentoController {
 	}
 	
 	@PostMapping("/lista-atendimento-dia")
-	public ResponseEntity<?> listaAtendimentoDiaInformado(@RequestBody AtendimentoDia atendimentoDia){
+	public ResponseEntity<?> listaAtendimentoDiaInformado(@RequestBody AtendimentoDiaDTO atendimentoDia){
 		var listaAtendimento = atendimentoService
 				.listaAtendimentoDiaInformado(atendimentoDia.getAtendimentoDia());
 		return  ResponseEntity.ok(listaAtendimento);
@@ -68,8 +68,8 @@ public class AtendimentoController {
 //	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> teste(@PathVariable("id") String id){
-		ClienteDTO dto = atendimentoService.consultarDadosCliente(id);
+	public ResponseEntity<?> consultaDadosAtendimento(@PathVariable("id") String id){
+		AtendimentoDetalhadoDTO dto = atendimentoService.consultaDadosAtendimento(id);
 		return ResponseEntity.ok(dto);
 	}
 	 

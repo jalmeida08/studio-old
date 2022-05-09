@@ -2,7 +2,7 @@ import { Atendimento } from "./atendimento";
 
 export class ValidaAtendimento {
     
-    listaAtendimentoConflitante!: Array<Atendimento>;
+    listaAtendimentoConflitante = new Array<Atendimento>();
 	atendimentoSolicitado!:Atendimento;
 
     constructor() {}

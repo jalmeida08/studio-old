@@ -2,7 +2,7 @@ package br.com.jsa.api.dto;
 
 import java.time.LocalDate;
 
-public class AtendimentoDia {
+public class AtendimentoDiaDTO {
 
 	private LocalDate atendimentoDia;
 

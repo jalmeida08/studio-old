@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.jsa.api.client.FuncionarioClient;
+import br.com.jsa.api.dto.AdicionaFuncionarioProcedimentoDTO;
 import br.com.jsa.api.dto.DetalheProcedimentoDTO;
 import br.com.jsa.api.dto.FuncionarioDTO;
 import br.com.jsa.api.dto.ProcedimentoDTO;
@@ -73,6 +74,21 @@ public class ProcedimentoService {
 					funcionarioClient.consultaDadosListaFuncionario(p.getFuncionarios());
 		
 		return new DetalheProcedimentoDTO(p, lstDadosFunci);
+	}
+
+	public void adicionaFuncionarioProcedimento(AdicionaFuncionarioProcedimentoDTO dto) {
+		var count = funcionarioClient
+			.idFuncionarioIsValid(List.of(dto.getIdFuncionario()))
+			.stream()
+			.filter(a-> !a.isValido())
+			.count();
+		
+		if(count > 0)
+			throw new NegocioException("Codigo de funcionario inválido");
+		
+		Procedimento p = buscaProcedimentoPorId(dto.getIdProcedimento());
+		p.getFuncionarios().add(dto.getIdFuncionario());
+		procedimentoRepository.save(p);
 	}
 
 

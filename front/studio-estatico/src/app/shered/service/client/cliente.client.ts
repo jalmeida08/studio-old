@@ -11,8 +11,8 @@ export class ClienteClient {
         private http: HttpClient
     ) { }
     
-    novoCliente(cliente:Cliente):Observable<HttpResponseBase> {
-        return this.http.post<HttpResponseBase>(
+    novoCliente(cliente:Cliente):Observable<Cliente> {
+        return this.http.post<Cliente>(
             `${environment.baseApi.CADASTRO_BASICO}/cliente`, cliente);
     }
 

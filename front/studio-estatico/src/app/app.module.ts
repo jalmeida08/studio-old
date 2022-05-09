@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -8,7 +8,8 @@ import { AppComponent } from './app.component';
 import { RequestInterceptor } from './core/interceptor/auth.interceptor';
 import { CalendarioModule } from './shered/component/calendario/calendario.module';
 import { MensagemComponent } from './shered/component/mensagem/mensagem.component';
-
+import ptBr from '@angular/common/locales/pt';
+registerLocaleData(ptBr);
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +27,12 @@ import { MensagemComponent } from './shered/component/mensagem/mensagem.componen
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,
       multi: true
-  }
+  },
+    DatePipe,
+    {
+        provide: LOCALE_ID,
+        useValue: 'pt'
+    }
   ],
   bootstrap: [AppComponent]
 })

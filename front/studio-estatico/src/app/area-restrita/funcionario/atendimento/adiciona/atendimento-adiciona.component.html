@@ -1,111 +1,178 @@
 
 
-
+<!-- GRUPO DE BOTÕES -->
 <div class="row mb-2">
     <div class="col">
         <button
         title="Cadastrar um novo cliente"
-        class="btn btn-primary  me-2"
+        class="btn btn-primary me-2"
         (click)="exibirTelaNovoCliente()">
             <i class="bi bi-person-plus-fill"></i>
         </button>
         <button
         title="Buscar cliete por nome ou data de nascimento"
-        class="btn btn-primary "
+        class="btn btn-primary me-2"
         (click)="exibirTelaBuscaCliente()">
             <i class="bi bi-search"></i>
         </button>
+        <button
+        title="Adicionar procedimento"
+        class="btn btn-primary "
+        (click)="exibirTelaProcedimento()">
+            <i class="bi bi-bag-plus"></i>
+            Procedimento
+        </button>
     </div>
 </div>
+
 <div class="row">
-    <div class="col-sm-3" *ngIf="cliente">
-        <div class="card border-primary mb-3" style="max-width: 18rem;">
-            <div class="card-header text-center">Atendimento</div>
-            <div class="card-body text-primary">
-              <h5 class="card-title">{{ cliente.nome }}</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <form [formGroup]="formAtendimento" (submit)="salva()">
-            <div class="form-group">
-                <div class="row">
-                    <div class="col">
-                        <div class="form-floating mb-3">
-                            <input
-                            formControlName="dataHoraAtendimento"
-                            type="datetime-local"
-                            class="form-control"
-                            id="timestampAtendimento"
-                            >
-                            <label for="timestampAtendimento">Data/Hora Atendimento</label>
-                        </div>
+    <!-- CARD DO ATENDIMENTO -->
+    <div class="col-sm-3">
+        <div class="card border-dark mb-3" style="max-width: 18rem;">
+            <div class="card-header">
+                <div class="row g-0">
+                    <div class="col-11">
+                        Atendimento
                     </div>
                     <div class="col">
-                        <div class="form-floating">
-                            <select
-                                formControlName="estadoAtendimento"
-                                class="form-select"
-                                id="estadoAtendimento"
-                                aria-label="Estado atendimento"
+                        <a
+                            [routerLink]="[]"
+                            title="Excluir atendimento"
+                            (click)="excluirAtendimento()"
                             >
-                                <option selected>Selecione</option>
-                                <option
-                                    [value]="item"
-                                    *ngFor="let item of listaAtendimento">
-                                    {{ item }}
-                                </option>
-                            </select>
-                            <label for="estadoAtendimento">Estado Atendimento</label>
-                        </div>
+                            <i class="bi bi-x-lg"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-            <lista-procedimento-app
-                (enviaProcedimentoSelecionadoEvent)="recebeProcedimentoSelecionado($event)"
-            ></lista-procedimento-app>        
-            <table *ngIf="pacoteAtendimento">
-                <tbody>
-                    <tr *ngFor="let item of pacoteAtendimento.listaProcedimento">
-                        <td>{{ item.nome }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <button type="submit">Salvar</button>
+            <div class="card-body text-dark">
+              <h6 class="card-title text-center">{{ cliente?.nome }}</h6>
+                <p class="card-text" *ngFor="let item of listaPocedimentoSelecionado">
+                    <span>Procedimento: {{ item.nome }}</span>
+                    <br>
+                    <small>Valor: {{item.valor | currency: 'BRL'}} </small>
+                    <br>
+                    <small>Duração: {{ mostrarDuracao(item.tempoDuracao) }} </small>
+                    <br>
+                    <small>Profissional: {{ funcionarioAtendimento?.nome }}</small> 
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMULÁRIO DO ATENDIMENTO -->
+    <div class="col">
+        <form [formGroup]="formAtendimento" (submit)="validaAtendimento()">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                <input
+                                formControlName="dataAtendimento"
+                                type="date"
+                                class="form-control"
+                                id="timestampAtendimento"
+                                >
+                                <label for="timestampAtendimento">Data Atendimento</label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input
+                                formControlName="horaAtendimento"
+                                type="time"
+                                class="form-control"
+                                id="horaAtendimento"
+                                >
+                                <label for="horaAtendimento">Hora Atendimento</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <ul class="lista-atendimento">
+                           <li class="item-atendimento" *ngFor="let item of listaAtendimentoDiaPesquisado">
+                                <i class="bi bi-journal-check me-2"></i>
+                               {{ item.dataHoraAtendimento | date: "dd/MM 'de' HH:mm"}}
+                               {{ item.dataHoraFimAtendimento | date: "' até ' HH:mm"}}
+                           </li> 
+                        </ul>
+                    </div>
+                </div>
+            </div>       
+            <a [routerLink]="[]" (click)="buscaAgenda()" class="btn btn-primary me-2">Buscar Agenda</a>
+            <button type="submit" class="btn btn-primary">Salvar</button>
         </form>
     </div>
+
 </div>
 
 
 <modal-app
     tituloModal="Bucar Cliente"
-    idModal="buscaPorCliente">
-        <form-cliente-app
-            *ngIf="isShowBuscaCliente"
-            (enviaDadosFormularioEvent)="recebeDadosFormulario($event)"
-            nomeBotao="Buscar"
-            [formCliente]="formCliente"
-        ></form-cliente-app>
+    idModal="buscaPorCliente"
+    [modalEvent]="modalEventBuscaCliente"
+    [listaBotao]="listaBotaoUnicoFechar"
+>
+    <form-cliente-app
+        *ngIf="isShowBuscaCliente"
+        (enviaDadosFormularioEvent)="recebeDadosFormulario($event)"
+        nomeBotao="Buscar"
+        [formCliente]="formCliente"
+    ></form-cliente-app>
 
-        <table class="table table-borderless mt-2" >
-            <tbody>
-                <tr *ngFor="let item of listaCliente" (click)="selecionaCliente(item)" class="maozinha">
-                    <td>{{ item.nome }}</td>
-                    <td>{{ item.dataNascimento | date:"dd/MM/yyyy"}}</td>
-                </tr>
-            </tbody>
-        </table>
+    <table class="table table-borderless mt-2" >
+        <tbody>
+            <tr *ngFor="let item of listaCliente" (click)="selecionaCliente(item)" class="maozinha">
+                <td>{{ item.nome }}</td>
+                <td>{{ item.dataNascimento | date:"dd/MM/yyyy"}}</td>
+            </tr>
+        </tbody>
+    </table>
 </modal-app>
 
 <modal-app
     tituloModal="Cadastrar Novo Cliente"
-    idModal="adicionaCliente">
+    idModal="adicionaCliente"
+    [modalEvent]="modalEventAdicionaCliente"
+    [listaBotao]="listaBotaoUnicoFechar">
     <form-cliente-app
         *ngIf="isShowNovoCliente"
         (enviaDadosFormularioEvent)="recebeDadosFormulario($event)"
         nomeBotao="Salvar"
         [formCliente]="formCliente"
     ></form-cliente-app>
+</modal-app>
+
+<modal-app
+    tituloModal="Adicionar Procedimento"
+    idModal="adicionaProcedimento"
+    [modalEvent]="modalEventAdicionaProcedimento"
+    [listaBotao]="listaBotaoUnicoFechar"
+>
+    <lista-procedimento-app
+        (enviaProcedimentoSelecionadoEvent)="recebeProcedimentoSelecionado($event)"
+    ></lista-procedimento-app> 
+</modal-app>
+
+<modal-app
+    tituloModal="Confirmação"
+    idModal="confirmacao"
+    [modalEvent]="modalEventConfirmacaoAtendimento"
+    [listaBotao]="listaBotaoModalConfirmacao">
+    <div class="row">
+        <div class="col" *ngIf="atendimentoValidado.listaAtendimentoConflitante.length > 0; else confirmacao">
+            <p>O seu atendimento possui conflito com algum outro atendimento(s) do(a) mesmo(a) profissional </p>
+            <p>Com o botão <strong>Buscar Agenda</strong> você consegue verificar a lista de atendimentos do dia.</p>
+        </div>
+        <ng-template #confirmacao>
+            <div class="col">
+                <span>Deseja confirmar o atendimento do procedimento para {{ atendimentoValidado?.atendimentoSolicitado?.dataHoraAtendimento | date: "dd/MM/yyyy 'às' HH:mm" }}?</span>
+            </div>
+        </ng-template>
+    </div>
+    
+
 
 </modal-app>

@@ -3,6 +3,8 @@ package br.com.jsa.api.client;
 import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import br.com.jsa.api.dto.FuncionarioDTO;
@@ -17,5 +19,6 @@ public interface FuncionarioClient {
 	@PostMapping("/consulta-lista")
 	public List<FuncionarioDTO> consultaDadosListaFuncionario(List<String> funcionarios);
 	
-	
+	@GetMapping("/{idFuncionario}")
+	public FuncionarioDTO consultaFuncionarioPorId(@PathVariable("idFuncionario") String id);
 }
