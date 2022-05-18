@@ -1,10 +1,10 @@
-import { HttpErrorResponse, HttpResponseBase } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { PacoteAtendimento } from 'src/app/shered/component/lista-procedimentos/pacote-atendimento';
 import { MensagemService } from 'src/app/shered/component/mensagem/mensagem-service';
-import { BotaoDTO } from 'src/app/shered/component/modal/botao-dto';
+import { ModalService } from 'src/app/shered/component/modal/modal.service';
 import { AgendaDiaFuncionario } from 'src/app/shered/model/agenda-dia-funcionario';
 import { Atendimento } from 'src/app/shered/model/atendimento';
 import { Cliente } from 'src/app/shered/model/cliente';
@@ -15,6 +15,7 @@ import { ValidaAtendimento } from 'src/app/shered/model/valida-atendimento';
 import { AtendimentoClient } from 'src/app/shered/service/client/atendimento.client';
 import { ClienteClient } from 'src/app/shered/service/client/cliente.client';
 import { AtendimentoForm } from './atendimento-form';
+import { ControleModaisAndBotoes } from './controle-modais-botes';
 
 declare const $: any;
 
@@ -25,27 +26,23 @@ declare const $: any;
 export class AtendimentoNovoComponent implements OnInit, OnDestroy {
 
     private $destroy = new Subject<boolean>();
-    // VARIAVEIS PARA ABRIR/FECHAR MODAL
-    modalEventBuscaCliente = new Subject<'OPEN'|'CLOSE'>();
-    modalEventAdicionaCliente = new Subject<'OPEN'|'CLOSE'>();
-    modalEventAdicionaProcedimento = new Subject<'OPEN'|'CLOSE'>();
-    modalEventConfirmacaoAtendimento = new Subject<'OPEN'|'CLOSE'>();
-    // SUBJECTS PARA TRATAR EVENTOS E LISTA DE BOTOES DE MODAIS
-    botaoSalvarEventSubject = new Subject<boolean>();
-    botaoFecharEventSubject = new Subject<boolean>();
-    listaBotaoModalConfirmacao = new Array<BotaoDTO>();
-    listaBotaoUnicoFechar = new Array<BotaoDTO>();
+    inicializarTelaListaProcedimentoSubject = new Subject<boolean>();
 
+    cliente?: Cliente;
+    atendimentoASerSalvo!: AtendimentoForm; 
     atendimentoForm = new AtendimentoForm();
     atendimentoValidado = new ValidaAtendimento();
-    listaIdProcedimento = new Array<string>();
-    listaAtendimentoDiaPesquisado = new Array<Atendimento>();
-    listaCliente = new Array<Cliente>();
+    funcionarioAtendimento = new Funcionario();
     formAtendimento = new FormGroup({});
     formCliente = new FormGroup({});
-    cliente?: Cliente;
+    listaIdProcedimento = new Array<string>();
+    listaAtendimentoDiaPesquisado?: Array<Atendimento>;
+    listaCliente = new Array<Cliente>();
     listaPocedimentoSelecionado = new Array<Procedimento>();
-    funcionarioAtendimento = new Funcionario();
+    controleModaisAndBotoes!:ControleModaisAndBotoes;
+    valorTotalAtendimento!:number;
+    tempoTotalAtendimento!:number;
+    totalComDesconto?:number;
     isShowBuscaCliente = false;
     isShowNovoCliente = false;
     monstrarSelect = false;
@@ -53,12 +50,14 @@ export class AtendimentoNovoComponent implements OnInit, OnDestroy {
     constructor(
         private clienteClient: ClienteClient,
         private atendimentoClient: AtendimentoClient,
-        private mensagemService:MensagemService
-        ) { }
+        private mensagemService:MensagemService,
+        private modalService: ModalService
+    ) { }
 
     ngOnInit() {
+        this.controleModaisAndBotoes = new ControleModaisAndBotoes(this.modalService);
         this.formAtendimento = this.montaFormAtendimento();
-        this.montaBotaoComum(this.listaBotaoUnicoFechar);
+        this.construirBotoesEAcoes();
     }
 
     ngOnDestroy(): void {
@@ -74,34 +73,32 @@ export class AtendimentoNovoComponent implements OnInit, OnDestroy {
     }
 
     exibirTelaNovoCliente():void {
-        this.acaoBotao(this.botaoFecharEventSubject, () => this.modalEventAdicionaCliente.next('CLOSE'));
-        this.modalEventAdicionaCliente.next('OPEN');
+        this.controleModaisAndBotoes.modalEventAdicionaCliente.next('OPEN');
         this.formCliente = this.atualizaNovoClienteFormulario();
         this.isShowNovoCliente = true;
         this.isShowBuscaCliente = false;
     }
 
     exibirTelaBuscaCliente():void {
-        this.acaoBotao(this.botaoFecharEventSubject ,() => this.modalEventBuscaCliente.next('CLOSE'));
         this.formCliente = this.atualizaBuscaClienteFormulario();
-        this.modalEventBuscaCliente.next('OPEN');
+        this.controleModaisAndBotoes.modalEventBuscaCliente.next('OPEN');
         this.isShowNovoCliente = false;
         this.isShowBuscaCliente = true;
     }
     
-    exibirTelaProcedimento() {        
-        this.acaoBotao(this.botaoFecharEventSubject ,() =>this.modalEventAdicionaProcedimento.next('CLOSE'));
-        this.modalEventAdicionaProcedimento.next('OPEN');
+    exibirTelaProcedimento() {
+        this.inicializarTelaListaProcedimentoSubject.next(true);
+        this.controleModaisAndBotoes.modalEventAdicionaProcedimento.next('OPEN');
     }
 
     selecionaCliente(cliente:Cliente):void {
         this.cliente = cliente;
         this.atendimentoForm.idCliente = cliente.id;
-        this.modalEventBuscaCliente.next('CLOSE');
+        this.controleModaisAndBotoes.modalEventBuscaCliente.next('CLOSE');
     }
 
     recebeProcedimentoSelecionado(pacoteAtendimento:PacoteAtendimento) {
-        this.modalEventAdicionaProcedimento.next('CLOSE');
+        this.controleModaisAndBotoes.modalEventAdicionaProcedimento.next('CLOSE');
         
         if(this.validaInclusaoDeUmNovoProcedimento(pacoteAtendimento)) {
             this.listaPocedimentoSelecionado.push(pacoteAtendimento.procedimento);
@@ -109,13 +106,14 @@ export class AtendimentoNovoComponent implements OnInit, OnDestroy {
             this.atendimentoForm.idFuncionario = pacoteAtendimento.funcionario.id;
             
             this.listaIdProcedimento.push(pacoteAtendimento.procedimento.id);
+            this.calcularTotalAtendimento();
         }
     }
     
     mostrarDuracao(tempo:number){
-        if(tempo >= 60)
-            return (tempo/60) + ' hrs';
-        else return tempo + ' min.'
+        let h = Math.floor(tempo / 60);
+        let m = tempo % 60;  
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}` 
     }
 
     excluirAtendimento() {
@@ -123,11 +121,14 @@ export class AtendimentoNovoComponent implements OnInit, OnDestroy {
         this.cliente = new Cliente();
         this.listaPocedimentoSelecionado = new Array<Procedimento>();
         this.funcionarioAtendimento = new Funcionario();
-        this.listaAtendimentoDiaPesquisado = new Array<Atendimento>();
+        this.listaAtendimentoDiaPesquisado = undefined;
     }
     
     buscaAgenda() {
-        if(this.atendimentoForm.idFuncionario.length <= 0 || this.formAtendimento.controls['dataAtendimento'].value === null){
+        
+        if(!this.atendimentoForm.idFuncionario ||
+            this.atendimentoForm.idFuncionario.length <= 0 ||
+            this.formAtendimento.controls['dataAtendimento'].value === null){
             this.mensagemService.info('Selecione um procedimento e uma data para poder buscar a agenda do profissional');
             return;
         }
@@ -139,6 +140,7 @@ export class AtendimentoNovoComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.$destroy))
             .subscribe({
                 next:(res:Atendimento[]) => {
+                    this.listaAtendimentoDiaPesquisado = new Array<Atendimento>();
                     this.listaAtendimentoDiaPesquisado = res;
                 },
                 error:(err:HttpErrorResponse) => console.error(err)                
@@ -149,34 +151,50 @@ export class AtendimentoNovoComponent implements OnInit, OnDestroy {
         if(!this.formAtendimento.valid || this.cliente === undefined || this.listaPocedimentoSelecionado.length === 0){
             this.mensagemService.warning('Fomulário inválido');
             return;
-        }
+        }            
 
-        this.listaBotaoModalConfirmacao = new Array<BotaoDTO>();
-        this.listaBotaoModalConfirmacao.push(new BotaoDTO('Salvar', 'primary', this.botaoSalvarEventSubject));
-        this.montaBotaoComum(this.listaBotaoModalConfirmacao);
-        let atendimento = new AtendimentoForm();        
+        this.atendimentoASerSalvo = new AtendimentoForm();        
         let hora = this.formAtendimento.controls['horaAtendimento'].value;
         let data =  this.formAtendimento.controls['dataAtendimento'].value;
         
-        atendimento.dataHoraAtendimento = data+"T"+hora;
-        atendimento.estadoAtendimento = EstadoAtendimento.AGENDADO;
-        atendimento.idCliente = this.cliente.id;
-        atendimento.procedimentos = this.listaIdProcedimento;
-        atendimento.idFuncionario = this.funcionarioAtendimento.id;
-        this.aguarRepostaModalConfirmacao(atendimento);
+        this.atendimentoASerSalvo.dataHoraAtendimento = data+"T"+hora;
+        this.atendimentoASerSalvo.estadoAtendimento = EstadoAtendimento.AGENDADO;
+        this.atendimentoASerSalvo.desconto = this.formAtendimento.controls['desconto'].value;
+        this.atendimentoASerSalvo.idCliente = this.cliente.id;
+        this.atendimentoASerSalvo.procedimentos = this.listaIdProcedimento;
+        this.atendimentoASerSalvo.idFuncionario = this.funcionarioAtendimento.id;
+        
         this.atendimentoClient
-            .validaAtendimento(atendimento)
+            .validaAtendimento(this.atendimentoASerSalvo)
             .pipe(takeUntil(this.$destroy))
                 .subscribe({
                     next:(res:ValidaAtendimento) => {
                         this.atendimentoValidado = res;
-                        this.modalEventConfirmacaoAtendimento.next('OPEN');
+                        this.controleModaisAndBotoes.modalEventConfirmacaoAtendimento.next('OPEN');
                     },
                     error:(err:HttpErrorResponse) => this.mensagemService.error(err.error.message)
                 });
         
     }
 
+    calcularTotalAtendimento() {
+        this.valorTotalAtendimento = 0;
+        this.tempoTotalAtendimento = 0;
+        this.listaPocedimentoSelecionado.forEach((item) => {
+            this.valorTotalAtendimento += item.valor;
+            this.tempoTotalAtendimento += item.tempoDuracao
+        });
+        this.calcularDesconto();
+    }
+    
+    calcularDesconto() {
+        if(this.valorTotalAtendimento > 0 && Number(this.formAtendimento.controls['desconto'].value) > 0){
+            let desconto = this.formAtendimento.controls['desconto'].value;
+            this.totalComDesconto = this.valorTotalAtendimento - ((this.valorTotalAtendimento*desconto)/100);
+        }else
+            this.totalComDesconto = undefined;
+    }
+    
     private buscaCliente(cliente: Cliente) {
         this.clienteClient
         .buscaCliente(cliente)
@@ -200,7 +218,7 @@ export class AtendimentoNovoComponent implements OnInit, OnDestroy {
     }
 
     private adicionaNovoCliente(cliente:Cliente){
-        this.modalEventAdicionaCliente.next('CLOSE');
+        this.controleModaisAndBotoes.modalEventAdicionaCliente.next('CLOSE');
         this.clienteClient
             .novoCliente(cliente)
             .pipe(takeUntil(this.$destroy))
@@ -214,26 +232,20 @@ export class AtendimentoNovoComponent implements OnInit, OnDestroy {
     }
     
     private salvarDadosAntedimento(atendimento:AtendimentoForm){
-        this.modalEventConfirmacaoAtendimento.next('CLOSE');
+        this.controleModaisAndBotoes.modalEventConfirmacaoAtendimento.next('CLOSE');
         this.atendimentoClient
             .salvarAtendimento(atendimento)
             .pipe(takeUntil(this.$destroy))
             .subscribe({
                 next: () =>{
+                    this.formAtendimento = this.montaFormAtendimento();
+                    this.excluirAtendimento();
                     this.mensagemService.success('Atendimento registrado com sucesso!!!');
                 }, 
                 error: (err:HttpErrorResponse) =>{
                     this.mensagemService.error(err.error.message)
                 }
             });
-    }
-    
-    private aguarRepostaModalConfirmacao(atendimentoFoorm:AtendimentoForm){
-        this.acaoBotao(this.botaoFecharEventSubject,
-            () => this.modalEventConfirmacaoAtendimento.next('CLOSE'));
-        
-        this.acaoBotao(this.botaoSalvarEventSubject,
-            () => this.salvarDadosAntedimento(atendimentoFoorm));
     }
     
     private atualizaNovoClienteFormulario():FormGroup {
@@ -255,24 +267,20 @@ export class AtendimentoNovoComponent implements OnInit, OnDestroy {
             estadoAtendimento: new FormControl(EstadoAtendimento.AGENDADO.valueOf(),Validators.required),
             dataAtendimento: new FormControl(null,Validators.required),
             horaAtendimento: new FormControl('',Validators.required),
+            desconto: new FormControl(''),
         });
     }
 
-    
-    private montaBotaoComum(listaBota:Array<BotaoDTO>){
-        listaBota.push(new BotaoDTO('Fechar', 'secondary', this.botaoFecharEventSubject));
+    private construirBotoesEAcoes() {
+        this.controleModaisAndBotoes.botaoAcaoModalBuscaCliente(
+            () => this.controleModaisAndBotoes.modalEventBuscaCliente.next('CLOSE'));
+        this.controleModaisAndBotoes.botaoAcaoModalConfirmacao(
+            () => this.salvarDadosAntedimento(this.atendimentoASerSalvo),
+            () => this.controleModaisAndBotoes.modalEventConfirmacaoAtendimento.next('CLOSE')
+        );
+        this.controleModaisAndBotoes.botaoAcaoModalAdicionaCliente(
+            () => this.controleModaisAndBotoes.modalEventAdicionaCliente.next('CLOSE'));
+        this.controleModaisAndBotoes.botaoModalProcedimento(
+            () =>this.controleModaisAndBotoes.modalEventAdicionaProcedimento.next('CLOSE'));
     }
-    
-    private acaoBotao(botaEvent:Subject<any>, funcaoCallBack:any) {
-        botaEvent
-            .pipe(takeUntil(this.$destroy))
-            .subscribe({
-                next:(res) => {
-                    if(res)
-                        funcaoCallBack();
-                }
-            });
-    }
-
-    
 }

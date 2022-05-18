@@ -7,6 +7,7 @@ import { AgendaDiaFuncionario } from '../../model/agenda-dia-funcionario';
 import { Atendimento } from '../../model/atendimento';
 import { AtendimentoHome } from '../../model/atendimento-home';
 import { AtendimentoDetalhe } from '../../model/atendimentoDetalhe';
+import { EditaAtendimentoForm } from '../../model/edita-atendimento-form';
 import { ValidaAtendimento } from '../../model/valida-atendimento';
 
 @Injectable({providedIn: 'root'})
@@ -18,7 +19,7 @@ export class AtendimentoClient {
         return this.http.post<AtendimentoHome[]>(`${environment.baseApi.STUDIO}/atendimento/lista-atendimento-dia`, {atendimentoDia});
     }
 
-    validaAtendimento(atendimento:AtendimentoForm):Observable<ValidaAtendimento> {
+    validaAtendimento(atendimento:AtendimentoForm|EditaAtendimentoForm):Observable<ValidaAtendimento> {
         return this.http.post<ValidaAtendimento>(
             `${environment.baseApi.STUDIO}/atendimento/valida-atendimento`, atendimento);
     }
@@ -41,5 +42,12 @@ export class AtendimentoClient {
 
     desmarcaAtendimento(id:string):Observable<HttpResponseBase> {
         return this.http.put<HttpResponseBase>(`${environment.baseApi.STUDIO}/atendimento/${id}/desmarca-atendimento`,{});
+    }
+    
+    validaEdicaoAtendimento(atendimento:EditaAtendimentoForm):Observable<ValidaAtendimento>{
+        return this.http.post<ValidaAtendimento>(`${environment.baseApi.STUDIO}/atendimento/valida-edicao-atendimento`, atendimento);
+    }
+    editaAtendimento(atendimento:EditaAtendimentoForm):Observable<ValidaAtendimento>{
+        return this.http.put<ValidaAtendimento>(`${environment.baseApi.STUDIO}/atendimento/edita-atendimento`, atendimento);
     }
 }

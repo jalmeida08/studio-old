@@ -12,11 +12,12 @@ export class ModalService implements OnDestroy {
         this.$destroy.unsubscribe();
     }
 
-    acaoBota(botaEvent:Subject<any>, funcaoCallBack:any) {
+    acaoBotao(botaEvent:Subject<any>, funcaoCallBack:any) {
         botaEvent
             .pipe(takeUntil(this.$destroy))
             .subscribe({
                 next:(res) => {
+                    console.log(res);
                     if(res)
                         funcaoCallBack();
                 }

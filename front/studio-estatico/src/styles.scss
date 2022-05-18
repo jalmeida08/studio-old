@@ -5,6 +5,10 @@
     cursor: pointer;
 }
 
+.text-right{
+    text-align: right;
+}
+
 .bloquea {
     cursor: not-allowed;
     width: 100%;
@@ -13,6 +17,11 @@
     left: 0;
     top: 0;
     opacity: 0.3;
-    background: #000
+    background: #FFF
     
+}
+
+.valor-cortado {
+    text-decoration: line-through;
+    color: #FF0000;
 }

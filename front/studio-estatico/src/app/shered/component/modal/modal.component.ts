@@ -21,7 +21,6 @@ export class ModalComponent implements OnInit, OnDestroy {
 
     ngOnInit() { 
         this.eventoModal();
-        console.log(this.listaBotao);
     }
 
     ngOnDestroy(): void {
@@ -48,5 +47,5 @@ export class ModalComponent implements OnInit, OnDestroy {
                 }
             })
     }
-    
+
 }

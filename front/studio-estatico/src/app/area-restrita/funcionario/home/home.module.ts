@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CalendarioModule } from 'src/app/shered/component/calendario/calendario.module';
@@ -21,6 +21,12 @@ import { HomeComponent } from './home.component';
     ],
     exports: [],
     declarations: [HomeComponent],
-    providers: [DatePipe],
+    providers: [
+        DatePipe,
+        {
+            provide: LOCALE_ID,
+            useValue: 'pt'
+        }
+    ],
 })
 export class HomeModule { }

@@ -22,6 +22,7 @@ import br.com.jsa.api.dto.FuncionarioDTO;
 import br.com.jsa.api.dto.ProcedimentoAtendimentoDTO;
 import br.com.jsa.api.dto.ValidaInclusaoAtendimentoDTO;
 import br.com.jsa.api.form.AtendimentoForm;
+import br.com.jsa.api.form.EditaAtendimentoForm;
 import br.com.jsa.dominio.bo.AtendimentoBO;
 import br.com.jsa.infra.exception.NegocioException;
 import br.com.jsa.infra.exception.ParametroInvalidaException;
@@ -59,9 +60,9 @@ public class AtendimentoService {
 			.orElseThrow(() -> new ParametroInvalidaException("Procedimento informado não foi encontrado na base de dados"));
 	}
 
-	private Double efetuarCalculoProcedimento(List<Procedimento> listaProcedimentoAtendimento) {
+	private Double efetuarCalculoProcedimento(List<Procedimento> listaProcedimentoAtendimento, Float desconto) {
 		return new AtendimentoBO()
-				.calculaValorAtendimento(listaProcedimentoAtendimento);
+				.calculaValorAtendimento(listaProcedimentoAtendimento, desconto);
 	}
 	
 	private List<Procedimento> buscaListaProcedimentos(List<String> procedimentos) {
@@ -114,10 +115,36 @@ public class AtendimentoService {
 				throw new NegocioException("O horário informado colide com outros atendimentos");
 			
 			clienteClient.validaClientePorId(a.getIdCliente());
-			a.setValor(efetuarCalculoProcedimento(listaProcedimentoAtendimento));
+			a.setValor(efetuarCalculoProcedimento(listaProcedimentoAtendimento, a.getDesconto()));
 			atendimentoRepository.save(a);
 	}
 
+	public ValidaInclusaoAtendimentoDTO validaEdicaoAtendimento(EditaAtendimentoForm form) {
+		var a = getAtendimento(form.getId());
+		var listaProcedimentosAtendimento = buscaListaProcedimentos(form.getProcedimentos());
+		
+		var dataFimProcedimento = new AtendimentoBO()
+				.calcularDataFimProcedimento(form.getDataHoraAtendimento(), listaProcedimentosAtendimento);
+		
+		a.setDataHoraFimAtendimento(dataFimProcedimento);
+		a.setDataHoraAtendimento(form.getDataHoraAtendimento());
+		a.setDesconto(form.getDesconto());
+		a.setProcedimentos(form.getProcedimentos());
+		a.setValor(efetuarCalculoProcedimento(listaProcedimentosAtendimento, a.getDesconto()));
+		
+		var listaAtendimentoConflitantes = 
+				consultaSepossuiAtendimentosConflitantes(
+						a.getIdFuncionario(), form.getDataHoraAtendimento(), a.getDataHoraFimAtendimento());
+		
+		 
+		return new ValidaInclusaoAtendimentoDTO(
+				listaAtendimentoConflitantes
+				.stream()
+				.filter(atendimento -> !atendimento.getId().equals(form.getId()))
+				.map(AtendimentoDTO::new)
+				.collect(Collectors.toList()), a);
+	}
+	
 	private List<Atendimento> consultaSepossuiAtendimentosConflitantes(
 			String idFuncionario,
 			LocalDateTime dataHoraAtendimento, LocalDateTime dataHoraFimAtendimento){
@@ -131,8 +158,8 @@ public class AtendimentoService {
 		return bo.listarAtendimentosNoMesmoHorario(listaAtendimentoPeriodo, dataHoraAtendimento, dataHoraFimAtendimento);
 	}
 
-	public Double calculaValorAtendimento(List<String> listaProcedimentos) {
-		return efetuarCalculoProcedimento(buscaListaProcedimentos(listaProcedimentos));
+	public Double calculaValorAtendimento(List<String> listaProcedimentos, Float desconto) {
+		return efetuarCalculoProcedimento(buscaListaProcedimentos(listaProcedimentos), desconto);
 	}
 
 	public ClienteDTO consultarDadosCliente(String id) {
@@ -223,5 +250,21 @@ public class AtendimentoService {
 			
 		return new AtendimentoDetalhadoDTO(a, c, f, listaProcedimento);
 	}
-	
+
+	public void editaAtendimento(EditaAtendimentoForm form) {
+		var a = getAtendimento(form.getId());
+		var listaProcedimentosAtendimento = buscaListaProcedimentos(form.getProcedimentos());
+		
+		var dataFimProcedimento = new AtendimentoBO()
+				.calcularDataFimProcedimento(form.getDataHoraAtendimento(), listaProcedimentosAtendimento);
+		
+		a.setDataHoraFimAtendimento(dataFimProcedimento);
+		a.setDataHoraAtendimento(form.getDataHoraAtendimento());
+		a.setDesconto(form.getDesconto());
+		a.setProcedimentos(form.getProcedimentos());
+		a.setValor(efetuarCalculoProcedimento(listaProcedimentosAtendimento, a.getDesconto()));
+		atendimentoRepository.save(a);
+		
+	}
+
 }

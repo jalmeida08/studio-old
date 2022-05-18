@@ -1,10 +1,11 @@
+import { Subject } from "rxjs";
 import { BotaoDTO } from "./botao-dto";
 
-export class BotaBuilder {
+export class BotaoBuilder {
     private listaBotao = new Array<BotaoDTO>();
 
-    adicionaBota(botao:BotaoDTO){
-        this.listaBotao.push(botao);
+    adicionaBota(nome:string, classe:string, subject:Subject<any>){
+        this.listaBotao.push(new BotaoDTO(nome, classe, subject));
         return this;
     }
 

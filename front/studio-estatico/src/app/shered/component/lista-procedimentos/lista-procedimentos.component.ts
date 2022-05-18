@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Funcionario } from '../../model/funcionario';
 import { Procedimento } from '../../model/procedimento';
@@ -16,10 +16,11 @@ import { PacoteAtendimento } from './pacote-atendimento';
 export class ListaProcedimentoComponent implements OnInit, OnDestroy {
 
     @Output() enviaProcedimentoSelecionadoEvent = new EventEmitter();
+    @Input() inicializarTelaSubject = new Subject<boolean>();
     private $destroy = new Subject<boolean>();
-    private procedimento = new Procedimento();
-    private funcionario = new Funcionario();
     private procedimentoSelecionado = new Procedimento();
+    funcionario = new Funcionario();
+    procedimento = new Procedimento();
     listaProcedimento = new Array<Procedimento>();
     listaFuncionario = new Array<Funcionario>();
 
@@ -29,12 +30,26 @@ export class ListaProcedimentoComponent implements OnInit, OnDestroy {
     ) { }
     
     ngOnInit() {
-        this.buscaListaProcedimento();
+        this.inicializar();
     }
 
     ngOnDestroy(): void {
         this.$destroy.next(true);
         this.$destroy.unsubscribe();
+    }
+    
+    private inicializar() {
+        this.inicializarTelaSubject
+            .pipe(takeUntil(this.$destroy))
+            .subscribe({
+                next:(res:boolean) =>{
+                    if(this.listaProcedimento.length === 0)
+                        this.buscaListaProcedimento();
+                    this.procedimento = new Procedimento();
+                    this.listaFuncionario = new Array<Funcionario>();
+                    this.funcionario = new Funcionario();
+                }
+            })
     }
     
     buscaDadosProfissional(procedimento:Procedimento){

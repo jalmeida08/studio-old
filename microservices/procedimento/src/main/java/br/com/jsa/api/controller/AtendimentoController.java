@@ -24,6 +24,7 @@ import br.com.jsa.api.dto.AtendimentoDetalhadoDTO;
 import br.com.jsa.api.dto.AtendimentoDiaDTO;
 import br.com.jsa.api.dto.BuscaDadosAgendaFuncionarioDTO;
 import br.com.jsa.api.form.AtendimentoForm;
+import br.com.jsa.api.form.EditaAtendimentoForm;
 import br.com.jsa.api.service.AtendimentoService;
 
 @RestController
@@ -99,5 +100,18 @@ public class AtendimentoController {
 				atendimentoService.buscaAgendaFuncionarioDia(buscaAgenda);
 		return  ResponseEntity.ok(listaAtendimento);
 		
+	}
+	
+	@PostMapping("/valida-edicao-atendimento")
+	public ResponseEntity<?> validaEdicaoAtendimento(@RequestBody EditaAtendimentoForm form){
+		var dto =  atendimentoService.validaEdicaoAtendimento(form);
+		return ResponseEntity.ok(dto);
+	}
+	
+	@PutMapping("/edita-atendimento")
+	@Transactional
+	public ResponseEntity<?> editaAtendimento(@RequestBody EditaAtendimentoForm form){
+		atendimentoService.editaAtendimento(form);
+		return ResponseEntity.ok().build();
 	}
 }

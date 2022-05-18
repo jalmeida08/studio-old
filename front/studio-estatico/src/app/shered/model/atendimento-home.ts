@@ -1,8 +1,10 @@
 import { Cliente } from "./cliente";
 import { EstadoAtendimento } from "./enum/estado-atendimento";
 import { Funcionario } from "./funcionario";
+import { ProcedimentoAtendimento } from "./procedimento-atendimento";
 
 export class AtendimentoHome {
+    
     id!:string;
     cliente! : Cliente;
     funcionario! :Funcionario;
@@ -11,5 +13,5 @@ export class AtendimentoHome {
     dataHoraAtendimento!: Date;
     dataHoraFimAtendimento!:Date;
     estadoAtendimento!: EstadoAtendimento;
-    procedimentos = new Array<string>();
+    procedimentos = new Array<string|ProcedimentoAtendimento>();
 }

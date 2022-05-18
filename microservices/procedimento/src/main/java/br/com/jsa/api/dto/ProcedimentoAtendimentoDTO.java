@@ -7,6 +7,7 @@ public class ProcedimentoAtendimentoDTO {
 	private String id;
 	private String nome;
 	private Double valor;
+	private Long tempoDuracao;
 	private boolean ativo;
 	
 	public ProcedimentoAtendimentoDTO(Procedimento p) {
@@ -14,6 +15,7 @@ public class ProcedimentoAtendimentoDTO {
 		this.nome = p.getNome();
 		this.valor = p.getValor();
 		this.ativo = p.isAtivo();
+		this.tempoDuracao = p.getTempoDuracao();
 	}
 
 	public String getId() {
@@ -28,6 +30,10 @@ public class ProcedimentoAtendimentoDTO {
 		return valor;
 	}
 
+
+	public Long getTempoDuracao() {
+		return tempoDuracao;
+	}
 
 	public boolean isAtivo() {
 		return ativo;

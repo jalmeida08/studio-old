@@ -5,6 +5,7 @@ export class ProcedimentoAtendimento {
     id!: string;
 	nome!: string;
 	valor!: number;
+	tempoDuracao!: number;
 	ativo!: boolean;
 
     constructor() { }
@@ -13,7 +14,8 @@ export class ProcedimentoAtendimento {
 		this.id = a.id;
 		this.nome = a.nome;
 		this.valor = a.valor;
-		this.ativo = a.ativo
+		this.ativo = a.ativo;
+		this.tempoDuracao = a.tempoDuracao;
 		return this;
 	}
 }

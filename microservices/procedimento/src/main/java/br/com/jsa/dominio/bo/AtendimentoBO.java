@@ -10,12 +10,16 @@ import br.com.jsa.infra.model.Procedimento;
 
 public class AtendimentoBO {
 
-	public Double calculaValorAtendimento(List<Procedimento> listaProcedimentoAtendimento) {
-		return listaProcedimentoAtendimento
+	public Double calculaValorAtendimento(List<Procedimento> listaProcedimentoAtendimento, Float desconto) {
+		var valor = listaProcedimentoAtendimento
 			.stream()
 			.map(a -> a.getValor())
 			.reduce(Double::sum)
 			.orElse(0D);
+		if(desconto > 0)
+			return valor - ((valor*desconto)/100);
+		else
+			return valor;
 	}
 
 	public LocalDateTime calcularDataFimProcedimento(LocalDateTime dataAgendamento,

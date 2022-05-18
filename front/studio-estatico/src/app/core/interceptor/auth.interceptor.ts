@@ -30,7 +30,7 @@ export class RequestInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             tap((event: HttpEvent<any>) => {
             }), catchError((error:HttpErrorResponse) => {
-                if(error.status === 403){
+                if(error.status === 401){
                     this.usuarioService.logout();
                     this.router.navigate(['']);
                 }

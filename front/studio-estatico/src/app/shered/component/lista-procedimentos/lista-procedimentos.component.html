@@ -3,14 +3,10 @@
         <div class="list-group" id="list-tab" role="tablist">
             <a
                 *ngFor="let item of listaProcedimento"
-                class="list-group-item list-group-item-action"
-                id="list-home-list"
-                data-bs-toggle="list"
-                href="#list-funci"
-                role="tab"
-                aria-controls="list-home"
+                class="list-group-item list-group-item-action maozinha"
                 (click)="buscaDadosProfissional(item)"
-                >
+                [ngClass]="{'active':procedimento === item}"
+            >
                 <div class="row">
                     <div class="d-flex w-100 justify-content-between">
                         <h6 class="mb-1">{{ item.nome }}</h6>
@@ -24,14 +20,10 @@
     <div class="col">
         <div class="list-group" id="list-tab" role="tablist">
             <a
+                class="list-group-item list-group-item-action maozinha"
                 *ngFor="let item of listaFuncionario"
-                class="list-group-item list-group-item-action"
-                id="list-home-list"
-                data-bs-toggle="list"
-                href="#list-home"
-                role="tab"
-                aria-controls="list-home"
                 (click)="selecionaFuncionario(item)"
+                [ngClass]="{'active':funcionario === item}"
             >
                 <div class="row">
                     <div class="col-7">{{ item.nome }}</div>
